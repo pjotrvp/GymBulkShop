@@ -1,0 +1,15 @@
+.nav {
+  background-color: black;
+}
+
+.btn.btn-primary {
+    color: red;
+  background-color: black;
+}
+
+.btn {
+    padding: 20px;;
+    color: #c82e2a;
+    background-color: black;
+    
+}

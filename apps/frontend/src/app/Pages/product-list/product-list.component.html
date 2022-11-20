@@ -1,0 +1,15 @@
+<div class="list">
+  <h1>
+    Supplements
+  </h1>
+  
+    <div *ngFor="let supplement of supplements" class="li-border">
+      <a routerLink="/supplements/{{supplement._id}}" class="li-text">
+          {{ supplement.name }}
+      </a>
+    </div>
+  
+  <a class="btn btn-primary" routerLink="/supplements/add"> Add </a>
+
+</div>
+

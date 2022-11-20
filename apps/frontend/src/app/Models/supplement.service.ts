@@ -61,7 +61,7 @@ export class SupplementService {
     return this.supplements;
   }
 
-  getSupplement(id: string){
+  getSupplement(id: string) {
     return this.supplements.find((supplement) => supplement._id === id);
   }
 
@@ -76,6 +76,7 @@ export class SupplementService {
   }
 
   addSupplement(supplement: Supplement) {
+    supplement._id = String(this.supplements.length + 1);
     this.supplements.push(supplement);
   }
 }

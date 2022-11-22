@@ -16,6 +16,7 @@ import { EditProductComponent } from './Edit/edit-product/edit-product.component
 import { FormsModule } from '@angular/forms';
 import { AddProductComponent } from './Add/add-product/add-product.component';
 import { AboutComponent } from './Pages/about/about.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { AboutComponent } from './Pages/about/about.component';
     AppRoutingModule,
     NgbModule,
     FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent],

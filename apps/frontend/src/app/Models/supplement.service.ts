@@ -1,11 +1,17 @@
+import { Observable, throwError } from 'rxjs';
+import { catchError, retry } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Supplement, SupplementType } from './supplement.model';
+
 @Injectable({
   providedIn: 'root',
 })
 export class SupplementService {
-  constructor() {}
+  BASE_URL = 'https://randomuser.me/api/';
+  constructor(private http: HttpClient) {}
 
+  
   supplements: Supplement[] = [
     {
       _id: '1',
@@ -58,6 +64,7 @@ export class SupplementService {
   ];
 
   getSupplements(): Supplement[] {
+    
     return this.supplements;
   }
 

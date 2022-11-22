@@ -1,3 +1,10 @@
 .footer {
-    background-color: rgb(184, 184, 184);
+  background-color: rgb(184, 184, 184);
 }
+
+footer {
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: center;
+}
+

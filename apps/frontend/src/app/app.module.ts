@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { AddProductComponent } from './Add/add-product/add-product.component';
 import { AboutComponent } from './Pages/about/about.component';
 import { HttpClientModule } from '@angular/common/http';
+import { AuthenticationComponent } from './authentication/authentication.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { HttpClientModule } from '@angular/common/http';
     EditProductComponent,
     AddProductComponent,
     AboutComponent,
+    AuthenticationComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,7 +40,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     NgbModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

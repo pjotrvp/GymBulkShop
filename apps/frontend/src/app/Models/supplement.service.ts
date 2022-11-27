@@ -8,9 +8,6 @@ import { Supplement, SupplementType } from './supplement.model';
   providedIn: 'root',
 })
 export class SupplementService {
-  BASE_URL = 'https://randomuser.me/api/';
-  constructor(private http: HttpClient) {}
-
   
   supplements: Supplement[] = [
     {
@@ -20,6 +17,10 @@ export class SupplementService {
       containsLactose: false,
       isVegan: true,
       price: 10,
+      flavours: ['Orange', 'Lemon', 'Strawberry'],
+      sizes: ['100pc', '200pc', '300pc'],
+      reviews: [],
+      ingredients: ['Vitamin C', 'Vitamin D', 'Vitamin E'],
     },
     {
       _id: '2',
@@ -28,6 +29,10 @@ export class SupplementService {
       containsLactose: false,
       isVegan: false,
       price: 20,
+      flavours: [],
+      sizes: ['100pc', '200pc', '300pc'],
+      reviews: [],
+      ingredients: ['Fish Oil', 'Gelatin'],
     },
     {
       _id: '3',
@@ -36,6 +41,10 @@ export class SupplementService {
       containsLactose: false,
       isVegan: false,
       price: 30,
+      flavours: ['Chocolate', 'Vanilla', 'Strawberry'],
+      sizes: ['100g', '1000g', '2500g'],
+      reviews: [],
+      ingredients: ['Whey Protein Concentrate', 'Whey Protein Isolate'],
     },
     {
       _id: '4',
@@ -44,6 +53,10 @@ export class SupplementService {
       containsLactose: false,
       isVegan: false,
       price: 40,
+      flavours: ['Unflavoured'],
+      sizes: ['100g', '1000g', '2500g'],
+      reviews: [],
+      ingredients: ['Creatine Monohydrate'],
     },
     {
       _id: '5',
@@ -52,6 +65,10 @@ export class SupplementService {
       containsLactose: false,
       isVegan: false,
       price: 50,
+      flavours: [],
+      sizes: ['250ml', '500ml'],
+      reviews: [],
+      ingredients: ['Caffeine', 'Taurine', 'Glucose'],
     },
     {
       _id: '6',
@@ -60,11 +77,14 @@ export class SupplementService {
       containsLactose: false,
       isVegan: false,
       price: 60,
+      flavours: ['Tuti Frutti', 'Strawberry', 'Blueberry'],
+      sizes: ['500g'],
+      reviews: [],
+      ingredients: ['DMAA', 'Caffeine', 'Taurine, beta-alanine'],
     },
   ];
 
   getSupplements(): Supplement[] {
-    
     return this.supplements;
   }
 

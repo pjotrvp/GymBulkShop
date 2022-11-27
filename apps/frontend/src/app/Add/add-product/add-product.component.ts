@@ -18,6 +18,10 @@ export class AddProductComponent implements OnInit {
       supplementType: SupplementType.Other,
       containsLactose: false,
       isVegan: false,
+      flavours: [],
+      sizes: [],
+      reviews: [],
+      ingredients: [],
     };
   }
   

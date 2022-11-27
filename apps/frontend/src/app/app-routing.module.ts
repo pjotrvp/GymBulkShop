@@ -7,6 +7,8 @@ import { SupplementComponent } from './Entities/supplement/supplement.component'
 import { EditProductComponent } from './Edit/edit-product/edit-product.component';
 import { AddProductComponent } from './Add/add-product/add-product.component';
 import { AboutComponent } from './Pages/about/about.component';
+import { ReviewComponent } from './Entities/review/review.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -58,6 +60,7 @@ const routes: Routes = [
     path: '**',
     redirectTo: '/home',
   },
+  
 ];
 
 @NgModule({

@@ -1,0 +1,26 @@
+.review__header__right__rating__stars{
+    display: flex;
+    flex-direction: row;
+    
+}
+
+.review {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 16px;
+    background-color: #e7e7e7;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 3px;
+}
+
+.review_buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+}
+
+.btn {
+    margin: 2px;
+}

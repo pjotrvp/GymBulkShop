@@ -1,26 +1,48 @@
-<div>
-  <h2>
-    {{ supplement?.name }}
-  </h2>
+<div class="productpage">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 productcol">
+        <img
+          class="product-img"
+          src="../../../assets/images/jack3d_blue_raspberry.png"
+          alt="{{ supplement?.name }}"
+        />
+      </div>
+      <div class="col-md-8">
+        <h2>
+          {{ supplement?.name }}
+        </h2>
 
-  <p>
-    Type: {{ supplement?.supplementType }} <br />
-    contains lactose: {{ supplement?.containsLactose }} <br />
-    is vegan: {{ supplement?.isVegan }} <br />
-    price: {{ supplement?.price }} <br />
-  </p>
+        <p>
+          Type: {{ supplement?.supplementType }} <br />
+          contains lactose: {{ supplement?.containsLactose }} <br />
+          is vegan: {{ supplement?.isVegan }} <br />
+          price: {{ supplement?.price }} <br />
+        </p>
 
-  <a
-    class="btn btn-secondary"
-    routerLink="/supplements/{{ supplement?._id }}/edit"
-  >
-    Edit</a
-  >
-  <a
-    class="btn btn-danger"
-    (click)="deleteSupplement()"
-    routerLink="/supplements"
-  >
-    Delete</a
-  >
-</div>
+        <div class="supp-buttons">
+          <a
+            class="btn btn-secondary"
+            routerLink="/supplements/{{ supplement?._id }}/edit"
+          >
+            Edit</a
+          >
+          <a
+            class="btn btn-danger"
+            (click)="deleteSupplement()"
+            routerLink="/supplements"
+          >
+            Delete</a
+          >
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Reviews</h3>
+          <review-list></review-list>
+        
+      </div>
+    </div>
+  </div>

@@ -7,22 +7,22 @@ export type ReviewDocument = HydratedDocument<Review>;
 @Schema()
 export class Review {
 
-  @Prop()
+  @Prop([Number])
   rating: number;
 
-  @Prop()
+  @Prop([String])
   description: string;
 
-  @Prop()
+  @Prop([String])
   title: string;
 
   @Prop({ type : mongoose.Schema.Types.ObjectId, ref: 'Supplement' })
   supplement: Supplement;
 
-  @Prop( { type : mongoose.Schema.Types.ObjectId, ref: 'Kit' })
+  @Prop({ type : mongoose.Schema.Types.ObjectId, ref: 'Kit' })
   kit: Kit;
 
-  @Prop()
+  @Prop({ type : mongoose.Schema.Types.ObjectId, ref: 'User'})
   user: User;
 }
 

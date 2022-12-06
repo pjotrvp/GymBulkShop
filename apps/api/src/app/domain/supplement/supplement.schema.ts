@@ -7,34 +7,34 @@ export type SupplementDocument = HydratedDocument<Supplement>;
 @Schema()
 export class Supplement {
 
-    @Prop()
+    @Prop([String])
     name: string;
 
-    @Prop()
+    @Prop([String])
     supplementType: string;
 
-    @Prop()
+    @Prop([Boolean])
     containsLactose: boolean;
 
-    @Prop()
+    @Prop([Boolean])
     isVegan: boolean;
 
-    @Prop()
+    @Prop([Number])
     price: number;
 
-    @Prop()
+    @Prop([String])
     flavours: string[];
 
-    @Prop()
+    @Prop([String])
     sizes: string[];
 
-    @Prop()
+    @Prop([String])
     ingredients: string[];
 
-    @Prop()
+    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }]})
     reviews: Review[];
 
-    @Prop()
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Order'})
     orders: Order;
 }
 export const SupplementSchema = SchemaFactory.createForClass(Supplement);

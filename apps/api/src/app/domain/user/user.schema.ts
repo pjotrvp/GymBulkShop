@@ -20,10 +20,10 @@ export class User{
     @Prop([String])
     role: string;
 
-    @Prop()
+    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review'}]})
     reviews: Review[];
 
-    @Prop()
+    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order'}]})
     orders: Order[];
 
 }

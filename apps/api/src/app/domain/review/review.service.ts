@@ -6,21 +6,31 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ReviewService {
-    constructor(
-       @InjectModel(Review.name) private reviewModel : Model<ReviewDocument>,
-    ) {
-        console.log('ReviewService: ', Review);
-    }
+  constructor(
+    @InjectModel(Review.name) private reviewModel: Model<ReviewDocument>
+  ) {
+    console.log('ReviewService: ', Review);
+  }
+  async create(reviewDto: ReviewDto): Promise<Review> {
+    const createdReview = new this.reviewModel(reviewDto);
+    return createdReview.save();
+  }
 
-    async findAll(): Promise<Review[]> {
-        return this.reviewModel.find().exec();
-    }
+  async edit(id: string, reviewDto: ReviewDto): Promise<Review> {
+    return this.reviewModel
+      .findByIdAndUpdate(id, reviewDto, { new: true })
+      .exec();
+  }
 
-    async findOne(id: number): Promise<Review> {
-        return this.reviewModel.findById(id).exec();
-    }
+  async findAll(): Promise<Review[]> {
+    return this.reviewModel.find().exec();
+  }
 
-    async remove(id: string) {
-        return this.reviewModel.findByIdAndRemove(id).exec();
-    }
+  async findOne(id: number): Promise<Review> {
+    return this.reviewModel.findById(id).exec();
+  }
+
+  async remove(id: string) {
+    return this.reviewModel.findByIdAndRemove(id).exec();
+  }
 }

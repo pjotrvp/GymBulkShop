@@ -8,16 +8,16 @@ export type UserDocument = HydratedDocument<User>;
 @Schema()
 export class User{
 
-    @Prop()
+    @Prop([String])
     name: string;
 
-    @Prop()
+    @Prop([String])
     email: string;
 
-    @Prop()
+    @Prop([String])
     password: string;
 
-    @Prop()
+    @Prop([String])
     role: string;
 
     @Prop()

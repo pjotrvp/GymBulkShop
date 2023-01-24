@@ -7,25 +7,25 @@ export type KitDocument = HydratedDocument<Kit>;
 @Schema()
 export class Kit {
     
-    @Prop()
+    @Prop([String])
     name: string;
     
-    @Prop()
+    @Prop([String])
     description: string;
     
-    @Prop()
+    @Prop([Number])
     price: number;
     
-    @Prop()
+    @Prop([String])
     image: string;
     
-    @Prop()
+    @Prop([Number])
     rating: number;
     
-    @Prop()
+    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }]})
     reviews: Review[];
 
-    @Prop()
+    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }]})
     orders: Order[];
 }
 export const KitSchema = SchemaFactory.createForClass(Kit);

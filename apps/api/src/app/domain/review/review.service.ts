@@ -1,5 +1,6 @@
 import { Review, ReviewDocument } from './review.schema';
-import { ReviewDto } from './review.dto';
+import { UpdateReviewDto } from './dto/updateReview.dto';
+import { CreateReviewDto } from './dto/createReview.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
@@ -11,14 +12,14 @@ export class ReviewService {
   ) {
     console.log('ReviewService: ', Review);
   }
-  async create(reviewDto: ReviewDto): Promise<Review> {
-    const createdReview = new this.reviewModel(reviewDto);
+  async create(createReviewDto: CreateReviewDto): Promise<Review> {
+    const createdReview = new this.reviewModel(createReviewDto);
     return createdReview.save();
   }
 
-  async edit(id: string, reviewDto: ReviewDto): Promise<Review> {
+  async update(id: string, updateReviewDto: UpdateReviewDto): Promise<Review> {
     return this.reviewModel
-      .findByIdAndUpdate(id, reviewDto, { new: true })
+      .findByIdAndUpdate(id, updateReviewDto, { new: true })
       .exec();
   }
 

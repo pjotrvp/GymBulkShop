@@ -1,4 +1,4 @@
-export class SupplementDto {
+export class CreateSupplementDto {
   name: string;
   supplementType: string;
   containsLactose: boolean;

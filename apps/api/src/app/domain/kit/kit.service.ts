@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Kit, KitDocument } from './kit.schema';
-import { KitDto } from './kit.dto';
+import { KitDto } from './dto/kit.dto';
 @Injectable()
 export class KitService {
   constructor(@InjectModel(Kit.name) private kitModel: Model<KitDocument>) {
@@ -14,7 +14,7 @@ export class KitService {
     return createdKit.save();
   }
 
-  async edit(id: string, kitDto: KitDto): Promise<Kit> {
+  async update(id: string, kitDto: KitDto): Promise<Kit> {
     return this.kitModel.findByIdAndUpdate(id, kitDto, { new: true }).exec();
   }
 

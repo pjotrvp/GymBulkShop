@@ -8,16 +8,16 @@ export type UserDocument = HydratedDocument<User>;
 @Schema()
 export class User{
 
-    @Prop([String])
+    @Prop(String)
     name: string;
 
-    @Prop([String])
+    @Prop(String)
     email: string;
 
-    @Prop([String])
+    @Prop(String)
     password: string;
 
-    @Prop([String])
+    @Prop(String)
     role: string;
 
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review'}]})

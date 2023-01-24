@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order, OrderDocument } from './order.schema';
-import { OrderDto } from './order.dto';
+import { OrderDto } from './dto/order.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
@@ -19,7 +19,7 @@ export class OrderService {
     return createdOrder.save();
   }
 
-  async edit(id: string, orderDto: OrderDto): Promise<Order> {
+  async update(id: string, orderDto: OrderDto): Promise<Order> {
     return this.orderModel
       .findByIdAndUpdate(id, orderDto, { new: true })
       .exec();

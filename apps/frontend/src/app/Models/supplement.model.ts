@@ -6,14 +6,12 @@ export enum SupplementType {
     Other = 'other',
     PreWorkout =  'preWorkout',
 }
-import { Entity } from "./entity.model";
+import { Product } from './product.model';
 import { Review } from './review.model';
-export class Supplement extends Entity {
+export class Supplement extends Product {
     flavours : string[];
     sizes : string[];
-    reviews : Review[];
     ingredients : string[];
-    name : string = '';
     supplementType : SupplementType = SupplementType.Other;
     containsLactose : boolean = false; 
     isVegan : boolean = false;
@@ -27,10 +25,10 @@ export class Supplement extends Entity {
         containsLactose : boolean,
         isVegan : boolean,
         price : number,
-        Reviews : Review[],
+        reviews : Review[],
         ingredients : string[],
     ) {
-        super(id);
+        super(id, name, reviews);
         this.flavours = flavours;
         this.sizes = sizes;
         this.name = name;
@@ -38,7 +36,6 @@ export class Supplement extends Entity {
         this.containsLactose = containsLactose;
         this.isVegan = isVegan;
         this.price = price;
-        this.reviews = Reviews;
         this.ingredients = ingredients;
      }
         

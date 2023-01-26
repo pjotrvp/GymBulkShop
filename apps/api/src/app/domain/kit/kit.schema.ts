@@ -1,31 +1,19 @@
-import { Review } from '../review/review.schema';
-import { Order } from '../order/order.schema';
+import { Product } from '../product/product.schema';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
+const kitType = {
+  values: ['machine', 'freeWeight', 'other', 'accessory', 'shoes', 'merch'],
+  message: '{VALUE} is not a valid kit type',
+};
+
 export type KitDocument = HydratedDocument<Kit>;
-
 @Schema()
-export class Kit {
-    
-    @Prop([String])
-    name: string;
-    
-    @Prop([String])
-    description: string;
-    
-    @Prop([Number])
-    price: number;
-    
-    @Prop([String])
-    image: string;
-    
-    @Prop([Number])
-    rating: number;
-    
-    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }]})
-    reviews: Review[];
-
-    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }]})
-    orders: Order[];
+export class Kit extends Product {
+  @Prop({
+    type: String,
+    enum: kitType,
+  })
+  kitType: string;
 }
 export const KitSchema = SchemaFactory.createForClass(Kit);

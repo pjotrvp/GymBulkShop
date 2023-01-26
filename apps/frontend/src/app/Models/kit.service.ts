@@ -15,6 +15,7 @@ export class KitService {
       kitType: KitType.FreeWeight,
       resistance: 20,
       price: 400,
+      reviews: [],
     },
     {
       _id: '2',
@@ -22,6 +23,7 @@ export class KitService {
       kitType: KitType.Machine,
       resistance: 400,
       price: 1000,
+      reviews: [],
     },
     {
       _id: '3',
@@ -29,6 +31,7 @@ export class KitService {
       kitType: KitType.Accessory,
       resistance: 0,
       price: 10,
+      reviews: [],
     },
     {
       _id: '4',
@@ -36,6 +39,7 @@ export class KitService {
       kitType: KitType.Other,
       resistance: 0,
       price: 1000,
+      reviews: [],
     },
     {
       _id: '5',
@@ -43,6 +47,7 @@ export class KitService {
       kitType: KitType.Shoes,
       resistance: 0,
       price: 100,
+      reviews: [],
     },
     {
       _id: '6',
@@ -50,6 +55,7 @@ export class KitService {
       kitType: KitType.Merch,
       resistance: 0,
       price: 20,
+      reviews: [],
     },
   ];
 

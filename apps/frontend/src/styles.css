@@ -1,1 +1,78 @@
 /* You can add global styles to this file, and also import other style files */
+.main-title {
+  text-align: center;
+  font-size: 55px;
+}
+
+.subtitle {
+  text-align: center;
+  text-decoration: underline;
+}
+
+body {
+  background-color: rgb(22 7 7);
+  color: white;
+}
+
+.btn {
+  background-color: darkred;
+  border: 1px solid rgb(109, 2, 2);
+  border-radius: 5px;
+  padding: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: #e7e7e7;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background-color: rgb(107, 0, 0);
+}
+
+.button-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.product-page {
+  width: 100vh;
+}
+
+.product-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.product-info,
+.product-edit-info {
+  background-color: rgba(204, 52, 52, 0.5);
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.product-edit-info {
+  width: 600px;
+}
+
+.product-price {
+  font-size: 22px;
+}
+
+.product-title,
+.product-price,
+.subtitle,
+.main-title {
+  font-weight: bold;
+}
+
+.invalid-feedback {
+  background-color: rgb(255, 184, 184);
+  padding-inline: 3px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+input[type='number'] {
+  width: 80px;
+}

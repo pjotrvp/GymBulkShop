@@ -1,7 +1,14 @@
-<form #productEditForm="ngForm" name="form" (ngSubmit)="productEditForm.form.valid && editSupplement()">
+<div class="product-edit-info">
+  <h2 class="subtitle">Edit - {{ supplement?.name }}</h2>
+  <a class="btn" routerLink="..">&larr; Back</a>
+  <form
+    #productEditForm="ngForm"
+    name="form"
+    (ngSubmit)="productEditForm.form.valid && editSupplement()"
+  >
     <div class="form-group">
-        <label for="name">Name</label>
-        <input
+      <label for="name">Supplement Name</label>
+      <input
         type="text"
         class="form-control"
         id="name"
@@ -9,88 +16,111 @@
         [(ngModel)]="supplement!.name"
         #name="ngModel"
         required
-        value="{{supplement?.name}}"
-        />
-        <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
+        [ngClass]="{
+          'is-invalid': name.invalid && (name.dirty || name.touched)
+        }"
+        value="{{ supplement?.name }}"
+      />
+      <div
+        *ngIf="name.invalid && (name.dirty || name.touched)"
+        class="invalid-feedback"
+      >
         <div *ngIf="name.errors?.['required']">Name is required</div>
-        </div>
+      </div>
     </div>
     <div class="form-group">
-        <label for="supplementType">Supplement Type</label>
-        <select
-      class="form-control"
-      [(ngModel)]="supplement!.supplementType"
-      #supplementType="ngModel"
-      name="supplementType"
-      required
-      [value]="supplement?.supplementType"
-    >
-      <option value="" selected disabled hidden>Select a type</option>
-      <option value="Vitamin" >
-        Vitamin
-      </option>
-      <option value="Protein" >
-        Protein
-      </option>
-      <option value="PreWorkout" >
-        Pre-Workout
-      </option>
-      <option value="Creatine">
-        Creatine
-      </option>
-      <option value="Other">
-        Other
-      </option>
-    </select>
-        <div *ngIf="supplementType.invalid && (supplementType.dirty || supplementType.touched)" class="alert alert-danger">
-        <div *ngIf="supplementType.errors?.['required']">Supplement Type is required</div>
+      <label for="supplementType">Supplement Type</label>
+      <select
+        class="form-control"
+        value="{{ supplement?.supplementType }}"
+        [(ngModel)]="supplement!.supplementType"
+        #supplementType="ngModel"
+        name="supplementType"
+        [ngClass]="{
+          'is-invalid':
+            supplementType.invalid &&
+            (supplementType.dirty || supplementType.touched)
+        }"
+        required
+      >
+        <option value="" disabled selected hidden>
+          Select Supplement Type
+        </option>
+        <option value="Vitamin">Vitamin</option>
+        <option value="Protein">Protein</option>
+        <option value="PreWorkout">Pre-Workout</option>
+        <option value="Creatine">Creatine</option>
+        <option value="Other">Other</option>
+      </select>
+      <div
+        *ngIf="
+          supplementType.invalid &&
+          (supplementType.dirty || supplementType.touched)
+        "
+        class="invalid-feedback"
+      >
+        <div *ngIf="supplementType.errors?.['required']">
+          Supplement Type is required
         </div>
+      </div>
     </div>
     <div class="form-group">
-        <label for="containsLactose">Contains Lactose</label>
-        <input
+      <label for="containsLactose">Contains Lactose</label>
+      <input
         type="checkbox"
         id="containsLactose"
         name="containsLactose"
         [(ngModel)]="supplement!.containsLactose"
         #containsLactose="ngModel"
-        value="{{supplement?.containsLactose}}"
-        />
-        <div *ngIf="containsLactose.invalid && (containsLactose.dirty || containsLactose.touched)" class="alert alert-danger">
-        <div *ngIf="containsLactose.errors?.['required']">Contains Lactose is required</div>
-        </div>
-        </div>
+        value="{{ supplement?.containsLactose }}"
+      />
+    </div>
     <div class="form-group">
-        <label for="isVegan">Is Vegan</label>
-        <input
+      <label for="isVegan">Is Vegan</label>
+      <input
         type="checkbox"
         id="isVegan"
         name="isVegan"
         [(ngModel)]="supplement!.isVegan"
         #isVegan="ngModel"
-        value="{{supplement?.isVegan}}"
-        />
-        <div *ngIf="isVegan.invalid && (isVegan.dirty || isVegan.touched)" class="alert alert-danger">
-        <div *ngIf="isVegan.errors?.['required']">Is Vegan is required</div>
-        </div>
-        </div>
+        value="{{ supplement?.isVegan }}"
+      />
+    </div>
     <div class="form-group">
-        <label for="price">Price</label>
-        <input
-      type="number"
-      class="form-control"
-      id="price"
-      name="price"
-      [(ngModel)]="supplement!.price"
-      #price="ngModel"
-      required
-      min="0,50"
-      max="1000"
-      value="{{supplement?.price}}"
-    />
-        <div *ngIf="price.invalid && (price.dirty || price.touched)" class="alert alert-danger">
+      <label for="price">Price (€)</label>
+
+      <input
+        type="number"
+        class="form-control"
+        id="price"
+        name="price"
+        [(ngModel)]="supplement!.price"
+        #price="ngModel"
+        required
+        min="1"
+        max="1000"
+        [ngClass]="{
+          'is-invalid': price.invalid && (price.dirty || price.touched)
+        }"
+        value="{{ supplement?.price }}"
+      />
+      <div
+        *ngIf="price.invalid && (price.dirty || price.touched)"
+        class="invalid-feedback"
+      >
         <div *ngIf="price.errors?.['required']">Price is required</div>
-        </div>
-        </div>
-    <button type="button" class="btn btn-primary" routerLink="/supplements" (click)="editSupplement()" [disabled]="productEditForm.invalid">Submit</button>
-</form> 
+        <div *ngIf="price.errors?.['min']">Price must be at least 1</div>
+        <div *ngIf="price.errors?.['max']">Price must be at most 1000</div>
+      </div>
+    </div>
+    <button
+      type="submit"
+      class="btn"
+      routerLink="/supplements/{{ supplement?._id }}"
+      (click)="editSupplement()"
+      [disabled]="productEditForm.invalid"
+    >
+      Submit
+    </button>
+  </form>
+</div>

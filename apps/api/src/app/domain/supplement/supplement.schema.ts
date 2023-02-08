@@ -1,40 +1,41 @@
-import { Review } from '../review/review.schema';
-import { Order } from '../order/order.schema';
-import mongoose, {HydratedDocument} from 'mongoose'
+import mongoose, { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Product } from '../product/product.schema';
+
+const SupplementType = {
+  values: [
+    'protein',
+    'creatine',
+    'pre-workout',
+    'post-workout',
+    'vitamins',
+    'other',
+  ],
+  message: '{VALUE} is not a valid supplement type',
+};
 export type SupplementDocument = HydratedDocument<Supplement>;
 
 @Schema()
-export class Supplement {
+export class Supplement extends Product {
+  @Prop({
+    type: String,
+    enum: SupplementType,
+  })
+  supplementType: string;
 
-    @Prop([String])
-    name: string;
+  @Prop(Boolean)
+  containsLactose: boolean;
 
-    @Prop([String])
-    supplementType: string;
+  @Prop(Boolean)
+  isVegan: boolean;
 
-    @Prop([Boolean])
-    containsLactose: boolean;
+  @Prop(String)
+  flavours: string[];
 
-    @Prop([Boolean])
-    isVegan: boolean;
+  @Prop(String)
+  sizes: string[];
 
-    @Prop([Number])
-    price: number;
-
-    @Prop([String])
-    flavours: string[];
-
-    @Prop([String])
-    sizes: string[];
-
-    @Prop([String])
-    ingredients: string[];
-
-    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }]})
-    reviews: Review[];
-
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Order'})
-    orders: Order;
+  @Prop(String)
+  ingredients: string[];
 }
 export const SupplementSchema = SchemaFactory.createForClass(Supplement);

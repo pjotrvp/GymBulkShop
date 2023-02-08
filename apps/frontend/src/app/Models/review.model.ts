@@ -5,6 +5,7 @@ export class Review extends Entity {
     rating : number = 0;
     text : string = '';
     title : string = '';
+    supplementId : string = '';
     userId : string = '';
     constructor(
         id : string,

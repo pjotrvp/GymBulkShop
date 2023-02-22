@@ -6,8 +6,11 @@ import { ProductListComponent } from './Pages/product-list/product-list.componen
 import { SupplementComponent } from './Entities/supplement/supplement.component';
 import { EditProductComponent } from './Edit/edit-product/edit-product.component';
 import { AddProductComponent } from './Add/add-product/add-product.component';
+import { AddCommentComponent } from './Add/add-comment/add-comment.component';
 import { AboutComponent } from './Pages/about/about.component';
 import { ReviewComponent } from './Entities/review/review.component';
+import { LoginComponent } from './authentication/Login/login.component';
+import { RegisterComponent } from './authentication/Register/register.component';
 
 const routes: Routes = [
   {
@@ -27,7 +30,7 @@ const routes: Routes = [
   },
   {
     path: 'about',
-    component: AboutComponent
+    component: AboutComponent,
   },
   {
     path: 'supplements',
@@ -51,16 +54,24 @@ const routes: Routes = [
             path: 'edit',
             component: EditProductComponent,
           },
+          {
+            path: 'review',
+            component: AddCommentComponent,
+          }
         ],
-      }
-      
-    ]
+      },
+    ],
   },
+  {
+    path: 'login',
+    component: LoginComponent,
+  },
+  { path: 'register', component: RegisterComponent },
+
   {
     path: '**',
     redirectTo: '/home',
   },
-  
 ];
 
 @NgModule({

@@ -6,14 +6,23 @@ export enum KitType {
   Shoes = 'shoes',
   Merch = 'merch',
 }
-
-import { Entity } from './entity.model';
-export class Kit extends Entity {
-  name: string = '';
+import { Review } from './review.model';
+import { Product } from './product.model';
+export class Kit extends Product {
   kitType: KitType = KitType.Other;
   resistance: number = 0;
   price: number = 0;
-  constructor(id: string, name: string) {
-    super(id);
+  constructor(
+    id: string,
+    name: string,
+    kitType: KitType,
+    resistance: number,
+    price: number,
+    reviews: Review[]
+  ) {
+    super(id, name, reviews);
+    this.kitType = kitType;
+    this.resistance = resistance;
+    this.price = price;
   }
 }

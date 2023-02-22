@@ -1,40 +1,41 @@
-import { Review } from '../review/review.schema';
-import { Order } from '../order/order.schema';
-import mongoose, {HydratedDocument} from 'mongoose'
+import mongoose, { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Product } from '../product/product.schema';
+
+const SupplementType = {
+  values: [
+    'protein',
+    'creatine',
+    'pre-workout',
+    'post-workout',
+    'vitamins',
+    'other',
+  ],
+  message: '{VALUE} is not a valid supplement type',
+};
 export type SupplementDocument = HydratedDocument<Supplement>;
 
 @Schema()
-export class Supplement {
+export class Supplement extends Product {
+  @Prop({
+    type: String,
+    enum: SupplementType,
+  })
+  supplementType: string;
 
-    @Prop()
-    name: string;
+  @Prop(Boolean)
+  containsLactose: boolean;
 
-    @Prop()
-    supplementType: string;
+  @Prop(Boolean)
+  isVegan: boolean;
 
-    @Prop()
-    containsLactose: boolean;
+  @Prop(String)
+  flavours: string[];
 
-    @Prop()
-    isVegan: boolean;
+  @Prop(String)
+  sizes: string[];
 
-    @Prop()
-    price: number;
-
-    @Prop()
-    flavours: string[];
-
-    @Prop()
-    sizes: string[];
-
-    @Prop()
-    ingredients: string[];
-
-    @Prop()
-    reviews: Review[];
-
-    @Prop()
-    orders: Order;
+  @Prop(String)
+  ingredients: string[];
 }
 export const SupplementSchema = SchemaFactory.createForClass(Supplement);

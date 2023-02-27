@@ -17,11 +17,12 @@ import { FormsModule } from '@angular/forms';
 import { AddProductComponent } from './Add/add-product/add-product.component';
 import { AboutComponent } from './Pages/about/about.component';
 import { HttpClientModule } from '@angular/common/http';
-import { AuthenticationComponent } from './authentication/authentication.component';
 import { AddCommentComponent } from './Add/add-comment/add-comment.component';
 import { ReviewComponent } from './Entities/review/review.component';
 import { EditReviewComponent } from './Edit/edit-review/edit-review.component';
 import { ReviewListComponent } from './Pages/review-list/review-list.component';
+import { LoginComponent } from './authentication/Login/login.component';
+import { RegisterComponent } from './authentication/Register/register.component';
 
 @NgModule({
   declarations: [
@@ -36,11 +37,12 @@ import { ReviewListComponent } from './Pages/review-list/review-list.component';
     EditProductComponent,
     AddProductComponent,
     AboutComponent,
-    AuthenticationComponent,
     AddCommentComponent,
     ReviewComponent,
     EditReviewComponent,
     ReviewListComponent,
+    LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,

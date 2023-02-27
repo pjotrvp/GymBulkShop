@@ -10,6 +10,8 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./edit-product.component.css'],
 })
 export class EditProductComponent implements OnInit {
+  ings: any[] = [];
+  flavours: any[] = [];
   constructor(
     private supplementService: SupplementService,
     private route: ActivatedRoute
@@ -19,9 +21,45 @@ export class EditProductComponent implements OnInit {
     this.supplement = this.supplementService.getSupplement(
       this.route.snapshot.params['id']
     );
+    for (let i = 0; i < this.supplement!.ingredients.length; i++) {
+      this.ings.push(0);
+    }
+    for (let i = 0; i < this.supplement!.flavours.length; i++) {
+      this.flavours.push(0);
+    }
     console.log('edit-product-component supplement: ', this.supplement);
-    
   }
+
+  addIngredient() {
+    if (this.ings.length == 10) {
+      alert("You can't add more than 10 ingredients");
+    }
+    if (this.ings.length < 10) {
+      this.ings.push(0);
+    }
+  }
+
+  removeIngredient() {
+    if (this.ings.length > 1) {
+      this.ings.pop();
+    }
+  }
+
+  addFlavour() {
+    if (this.flavours.length == 10) {
+      alert("You can't add more than 10 flavours");
+    }
+    if (this.flavours.length < 10) {
+      this.flavours.push(0);
+    }
+  }
+
+  removeFlavour() {
+    if (this.flavours.length > 1) {
+      this.flavours.pop();
+    }
+  }
+
   editSupplement() {
     this.supplementService.updateSupplement(this.supplement!);
   }

@@ -22,7 +22,7 @@ import { ConfigModule } from '@nestjs/config';
       port: process.env.NEO4J_PORT,
       username: process.env.NEO4J_USER,
       password: process.env.NEO4J_PASSWORD,
-      database: process.env.NEO4J_DATABASE,
+      // database: process.env.NEO4J_DATABASE,
     }),
     SupplementModule,
     AuthModule,

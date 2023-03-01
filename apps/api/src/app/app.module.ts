@@ -9,16 +9,21 @@ import { OrderModule } from './domain/order/order.module';
 import { KitModule } from './domain/kit/kit.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Neo4jModule } from 'nest-neo4j';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://admin:admin@cluster0.yrmu0e7.mongodb.net/?retryWrites=true&w=majority'),
-    // Neo4jModule.forRoot({
-    //   scheme: 'neo4j',
-    //   uri: 'neo4j+s://64541d6d.databases.neo4j.io',
-    //   username: 'neo4j',
-    //   password: 'neo',
-    // }),
+    MongooseModule.forRoot(
+      process.env.MONGODB_URI,
+    ),
+    Neo4jModule.forRoot({
+      scheme: 'neo4j+s',
+      host: process.env.NEO4J_HOST,
+      port: process.env.NEO4J_PORT,
+      username: process.env.NEO4J_USER,
+      password: process.env.NEO4J_PASSWORD,
+      database: process.env.NEO4J_DATABASE,
+    }),
     SupplementModule,
     AuthModule,
     UserModule,
@@ -30,6 +35,5 @@ import { Neo4jModule } from 'nest-neo4j';
   providers: [AppService],
 })
 export class AppModule {
-  
+ 
 }
-

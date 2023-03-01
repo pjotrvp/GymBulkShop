@@ -10,7 +10,6 @@ import neo4j, {
 import { Inject, Injectable, OnApplicationShutdown } from '@nestjs/common';
 import { Neo4jConfig } from './neo4j-config.interface';
 import { NEO4J_CONFIG, NEO4J_DRIVER } from './neo4j.constants';
-import { stringify } from 'querystring';
 
 @Injectable()
 export class Neo4jService implements OnApplicationShutdown {

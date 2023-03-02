@@ -6,12 +6,16 @@ import { CreateSupplementDto } from './dto/createSupplement.dto';
 import { UpdateSupplementDto } from './dto/updateSupplement.dto';
 import { Neo4jService } from '../../Infrastructure/neo4j/neo4j.service';
 
+
 @Injectable()
 export class SupplementService {
   constructor(
     @InjectModel(Supplement.name)
     private supplementModel: Model<SupplementDocument>,
     private readonly neo4jService: Neo4jService,
+    
+
+
   ) {
     console.log('SupplementService: ', Supplement);
   }
@@ -37,20 +41,20 @@ export class SupplementService {
     return this.supplementModel.findById(id).exec();
   }
 
-  async findRecommendations(id: string): Promise<Supplement[]> {
-    const result = await this.neo4jService.read(
-      `MATCH (s:Supplement {id: "${id}"})-[:RECOMMENDED]->(r:Supplement) RETURN r`
-    );
-    const recommendations = result.records.map((record) => {
-      return record.get('r').properties;
-    });
-    return recommendations;
-  }
+  // async findRecommendations(id: string): Promise<Supplement[]> {
+  //   const result = await this.neo4jService.read(
+  //     `MATCH (s:Supplement {id: "${id}"})-[:RECOMMENDED]->(r:Supplement) RETURN r`
+  //   );
+  //   const recommendations = result.records.map((record) => {
+  //     return record.get('r').properties;
+  //   });
+  //   return recommendations;
+  // }
 
   async remove(id: string) {
-    await this.neo4jService.write(
-      `MATCH (s:Supplement {id: "${id}"}) DETACH DELETE s`
-    )
+    // await this.neo4jService.write(
+    //   `MATCH (s:Supplement {id: "${id}"}) DETACH DELETE s`
+    // )
     return this.supplementModel.findByIdAndRemove(id).exec();
   }
 }

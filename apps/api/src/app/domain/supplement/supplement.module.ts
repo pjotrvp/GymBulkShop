@@ -3,7 +3,6 @@ import { Supplement, SupplementSchema } from './supplement.schema';
 import { SupplementService } from './supplement.service';
 import { SupplementController } from './supplement.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Neo4jService } from '../../Infrastructure/neo4j/neo4j.service';
 import { Neo4jModule } from '../../Infrastructure/neo4j/neo4j.module';
 
 

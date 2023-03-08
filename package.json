@@ -31,6 +31,7 @@
     "@popperjs/core": "^2.11.6",
     "bcrypt": "^5.1.0",
     "mongodb": "^3.7.3",
+    "mongodb-memory-server": "^8.11.5",
     "mongoose": "^6.7.5",
     "neo4j-driver": "^5.3.0",
     "nest-neo4j": "^0.2.0",

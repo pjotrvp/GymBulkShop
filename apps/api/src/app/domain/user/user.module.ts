@@ -9,6 +9,7 @@ import { Neo4jModule } from '../../Infrastructure/neo4j/neo4j.module';
     imports: [MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]), Neo4jModule],
     providers: [UserService],
     controllers: [UserController],
+    exports: [UserService],
 })
 
 export class UserModule {}

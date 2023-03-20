@@ -31,6 +31,7 @@
     "@nrwl/angular": "15.2.0",
     "@popperjs/core": "^2.11.6",
     "bcrypt": "^5.1.0",
+    "express-session": "^1.17.3",
     "mongodb": "^3.7.3",
     "mongodb-memory-server": "^8.11.5",
     "mongoose": "^6.7.5",

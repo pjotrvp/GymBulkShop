@@ -17,9 +17,9 @@ import { SessionSerializer } from './session.serializer';
     secret: process.env.JWT_SECRET,
     signOptions: {expiresIn: '7d'},
   }),
-  UserModule, PassportModule.register({session: true}),
+  UserModule, 
 ],
-  providers: [AuthService, JwtStrategy, LocalStrategy, JwtAuthGuard, LocalAuthGuard, SessionSerializer],
+  providers: [AuthService, JwtStrategy, LocalStrategy, JwtAuthGuard, LocalAuthGuard],
   controllers: [AuthController]
 })
 export class AuthModule {}

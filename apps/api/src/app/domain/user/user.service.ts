@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
 import { hash } from 'bcrypt';
 import { User, UserDocument } from './user.schema';
 import { CreateUserDto } from './dto/createUser.dto';
@@ -81,9 +80,8 @@ export class UserService {
   }
 
   async findOneByEmail(email: string): Promise<User> {
-    //No need to check if the user exists, because this function is used by the login function
-    //If we were to check if the user exists, users of the system would be able to check if a user exists
-    return this.userModel.findOne({ email });
+    const user = await this.userModel.findOne({ email });
+    return user
   }
 
   async remove(id: string) {

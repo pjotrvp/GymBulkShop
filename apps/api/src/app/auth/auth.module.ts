@@ -9,6 +9,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthService } from './auth.service';
 import { UserModule } from '../domain/user/user.module';
 import { PassportModule } from '@nestjs/passport';
+import { SessionSerializer } from './session.serializer';
 
 @Module({
   imports: [ConfigModule.forRoot(),
@@ -16,9 +17,9 @@ import { PassportModule } from '@nestjs/passport';
     secret: process.env.JWT_SECRET,
     signOptions: {expiresIn: '7d'},
   }),
-  UserModule, PassportModule
+  UserModule, PassportModule.register({session: true}),
 ],
-  providers: [AuthService, JwtStrategy, LocalStrategy, JwtAuthGuard, LocalAuthGuard],
+  providers: [AuthService, JwtStrategy, LocalStrategy, JwtAuthGuard, LocalAuthGuard, SessionSerializer],
   controllers: [AuthController]
 })
 export class AuthModule {}

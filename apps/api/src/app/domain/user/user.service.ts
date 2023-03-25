@@ -12,7 +12,7 @@ export class UserService {
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private readonly neo4jService: Neo4jService
   ) {
-    console.log('UserService: ', User);
+    
   }
 
   async create(userDto: CreateUserDto): Promise<User> {

@@ -69,8 +69,44 @@ describe('AuthController', () => {
 
       await expect(authController.register(exampleUser)).rejects.toThrow();
     });
+  });
 
+  describe('login', () => {
+    it('should call the generateToken method of the auth service', async () => {
+      const loginReq: { password: string; email: string } = {
+        email: 'test@protonmail.com',
+        password: 'supersecret123',
+      };
 
+      const mockedToken = { access_token: 'mockedToken' };
+
+      const exampleUser: {
+        _id: any;
+        name: string;
+        email: string;
+        role: string;
+        access_token: string;
+      } = {
+        _id: '1',
+        name: 'Bart',
+        email: loginReq.email,
+        role: 'user',
+        access_token: '',
+      };
+
+      jest
+        .spyOn(authService, 'login')
+        .mockImplementation(
+          async (_req: { password: string; email: string }) => {
+            exampleUser.access_token = mockedToken.access_token;
+            return exampleUser;
+          }
+        );
+
+      const loginResponse = await authController.login(loginReq);
+
+      expect(loginResponse.access_token).toEqual(mockedToken.access_token);
+    });
   });
   it('should be defined', () => {
     expect(authController).toBeDefined();

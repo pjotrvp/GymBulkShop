@@ -119,6 +119,17 @@ describe('AuthService', () => {
     }
   });
 
+  it('should validate user (user wrong password)', async () => {
+    const user = await userService.findOneByEmail(testUser.email);
+    try {
+      await authService.validateUser(user.email, 'qwert6');
+    } catch (e) {
+      expect(e.message).toEqual('Unauthorized');
+    }
+  });
+
+  it('')
+
   afterAll(async () => {
     await mongoClient.close();
     await memoryServer.stop();

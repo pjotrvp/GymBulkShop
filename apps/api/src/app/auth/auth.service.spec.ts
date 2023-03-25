@@ -128,7 +128,13 @@ describe('AuthService', () => {
     }
   });
 
-  it('')
+  it('should validate user', async () => {
+    const user = await userService.findOneByEmail(testUser.email);
+    const response = await authService.validateUser(user.email, user.password);
+    const result = user;
+    delete result.password
+    expect(response).toEqual(result);
+  })
 
   afterAll(async () => {
     await mongoClient.close();

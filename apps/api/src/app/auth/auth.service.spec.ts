@@ -108,6 +108,17 @@ describe('AuthService', () => {
     expect(response.access_token).toEqual(token);
   });
 
+  it('should validate user (user does not exist)', async () => {
+    try {
+      await authService.validateUser(
+        'thismaildoesnotexist@proton.me',
+        'qwerty6'
+      );
+    } catch (e) {
+      expect(e.message).toEqual('Unauthorized');
+    }
+  });
+
   afterAll(async () => {
     await mongoClient.close();
     await memoryServer.stop();

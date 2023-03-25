@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateUserDto } from '../domain/user/dto/createUser.dto';
 import { UserService } from '../domain/user/user.service';
@@ -59,7 +60,17 @@ describe('AuthController', () => {
       expect(user).toHaveProperty('_id', exampleId);
     });
 
-    
+    it('should not call create on failed register (duplicate username)', async () => {
+      register = jest
+        .spyOn(userService, 'create')
+        .mockImplementation(async (_user: CreateUserDto) => {
+          throw new BadRequestException('Registration failed');
+        });
+
+      await expect(authController.register(exampleUser)).rejects.toThrow();
+    });
+
+
   });
   it('should be defined', () => {
     expect(authController).toBeDefined();

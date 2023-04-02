@@ -4,7 +4,7 @@ import { User, UserDocument } from './user.schema';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { isValidObjectId, Model } from 'mongoose';
+import { isValidObjectId, Model, ObjectId } from 'mongoose';
 import { Neo4jService } from '../../Infrastructure/neo4j/neo4j.service';
 @Injectable()
 export class UserService {
@@ -77,6 +77,15 @@ export class UserService {
       throw new NotFoundException('No current user available');
     }
     return user;
+  }
+
+  async getCurrentId(): Promise<string> {
+    const user = await this.userModel.findOne({ current : true});
+    if(!user) {
+      throw new NotFoundException('No current user available');
+    }
+    const userId = user['_id'].toString();
+    return userId;
   }
 
   async findOneByEmail(email: string): Promise<User> {

@@ -5,6 +5,7 @@ import { SupplementController } from './supplement.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Neo4jModule } from '../../Infrastructure/neo4j/neo4j.module';
 import { AuthModule } from '../../auth/auth.module';
+import { UserModule } from '../user/user.module';
 
 
 @Module({
@@ -12,7 +13,7 @@ import { AuthModule } from '../../auth/auth.module';
     MongooseModule.forFeature([
       { name: Supplement.name, schema: SupplementSchema },
     ]),
-    Neo4jModule, AuthModule
+    Neo4jModule, AuthModule, UserModule
   ],
   providers: [
     SupplementService,

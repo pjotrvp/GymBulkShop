@@ -29,13 +29,16 @@ export class Supplement extends Product {
   @Prop(Boolean)
   isVegan: boolean;
 
-  @Prop(String)
+  @Prop([String])
   flavours: string[];
 
-  @Prop(String)
+  @Prop([String])
   sizes: string[];
 
-  @Prop(String)
+  @Prop([String])
   ingredients: string[];
+
+  @Prop(String)
+  createdById: string;
 }
 export const SupplementSchema = SchemaFactory.createForClass(Supplement);

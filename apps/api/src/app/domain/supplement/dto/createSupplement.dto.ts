@@ -1,5 +1,7 @@
 export class CreateSupplementDto {
   name: string;
+  description: string;
+  image: string;
   supplementType: string;
   containsLactose: boolean;
   isVegan: boolean;
@@ -9,4 +11,5 @@ export class CreateSupplementDto {
   ingredients: string[];
   reviews: string[];
   order: string;
+  createdBy: string;
 }

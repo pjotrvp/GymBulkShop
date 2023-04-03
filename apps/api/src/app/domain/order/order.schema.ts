@@ -7,14 +7,16 @@ export type OrderDocument = HydratedDocument<Order>;
 
 @Schema()
 export class Order {
-  
-  @Prop({ type : mongoose.Schema.Types.ObjectId, ref: 'User'})
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   user: User;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Kit' }]})
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Kit' }] })
   kits: Kit[];
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Supplement' }]})
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Supplement' }] })
   supplements: Supplement[];
+
+  @Prop(String)
+  createdById: string;
 }
 export const OrderSchema = SchemaFactory.createForClass(Order);

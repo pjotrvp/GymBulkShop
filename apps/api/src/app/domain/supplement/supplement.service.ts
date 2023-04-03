@@ -70,8 +70,12 @@ export class SupplementService {
     return supplement;
   };
   async findRecommendations(id: string): Promise<Supplement[]> {
+    const supplementName = (await this.supplementModel.findById(id)).name;
     const result = await this.neo4jService.read(
-      `MATCH (s:Supplement {id: "${id}"})-[:RECOMMENDED]->(r:Supplement) RETURN r`
+      `MATCH (s1:Supplement {supplementName ${supplementName}})<-[:ORDERED]-(u1:User)-[:ORDERED]->(s2:Supplement)
+WHERE s2 <> s1
+RETURN s2.name, count(u1) as users_ordered
+ORDER BY users_ordered DESC`
     );
     const recommendations = result.records.map((record) => {
       return record.get('r').properties;

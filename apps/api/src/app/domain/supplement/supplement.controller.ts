@@ -49,6 +49,11 @@ export class SupplementController {
     return this.supplementService.update(params.id, supplementDto);
   }
 
+  @Get(':id/recommendations')
+  async recommendations(@Param() params): Promise<any> {
+    return this.supplementService.findRecommendations(params.id);
+  }
+
   @Get()
   async findAll(): Promise<Supplement[]> {
     return this.supplementService.findAll();

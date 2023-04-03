@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Supplement, SupplementDocument } from './supplement.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -18,12 +18,16 @@ export class SupplementService {
 
 
   ) {
-    console.log('SupplementService: ', Supplement);
+    
   }
   async create(supplementDto: CreateSupplementDto): Promise<Supplement> {
+    const supplement = await this.findByName(supplementDto.name);
+    if(supplement) {
+      throw new BadRequestException('Supplement with this name already exists');
+    }
     const currentUser = this.userService.getCurrent();
-    supplementDto.createdBy = currentUser['_id'];
-    const createdSupplement = new this.supplementModel(supplementDto);
+    const createdBy: string = currentUser['_id'];
+    const createdSupplement = new this.supplementModel(supplementDto, createdBy);
     if(createdSupplement.$isValid) {
       await this.neo4jService.write(
         `CREATE (s:Supplement {name: "${createdSupplement.name}", createdBy: "${
@@ -39,7 +43,15 @@ export class SupplementService {
     return createdSupplement.save();
   }
 
-  async edit(id: string, supplementDto: UpdateSupplementDto): Promise<Supplement> {
+  async update(id: string, supplementDto: UpdateSupplementDto): Promise<Supplement> {
+    const currentUserId = await this.userService.getCurrentId();
+    const supplementCreatedById = (await this.supplementModel.findById(id)).createdById;
+    if (currentUserId !== supplementCreatedById) {
+      throw new HttpException(
+        'Can only edit owned supplements',
+        HttpStatus.FORBIDDEN
+      );
+    }
     return this.supplementModel
       .findByIdAndUpdate(id, supplementDto, { new: true })
       .exec();
@@ -53,6 +65,10 @@ export class SupplementService {
     return this.supplementModel.findById(id).exec();
   }
 
+  async findByName(name: string): Promise<Supplement> {
+    const supplement = await this.supplementModel.findOne({ name})
+    return supplement;
+  };
   async findRecommendations(id: string): Promise<Supplement[]> {
     const result = await this.neo4jService.read(
       `MATCH (s:Supplement {id: "${id}"})-[:RECOMMENDED]->(r:Supplement) RETURN r`

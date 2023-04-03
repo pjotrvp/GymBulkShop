@@ -61,14 +61,14 @@ describe('AuthService', () => {
     name: 'Freek4',
     email: 'Freek31@proton.me',
     password: 'strongPassword2',
-    role: 'user',
+    
   };
 
   const testUser: User = {
     name: testUserDto.name,
     email: testUserDto.email,
     password: testUserDto.password,
-    role: testUserDto.role,
+    role: 'user',
     reviews: [],
     orders: [],
   };

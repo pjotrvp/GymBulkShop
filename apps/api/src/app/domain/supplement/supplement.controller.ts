@@ -46,7 +46,7 @@ export class SupplementController {
         HttpStatus.FORBIDDEN
       );
     }
-    return this.supplementService.edit(params.id, supplementDto);
+    return this.supplementService.update(params.id, supplementDto);
   }
 
   @Get()

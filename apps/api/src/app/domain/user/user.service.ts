@@ -4,7 +4,7 @@ import { User, UserDocument } from './user.schema';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { isValidObjectId, Model, ObjectId } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { Neo4jService } from '../../Infrastructure/neo4j/neo4j.service';
 @Injectable()
 export class UserService {
@@ -21,8 +21,8 @@ export class UserService {
     if(user) {
       throw new BadRequestException('User already exists');
     }
-
-    const createdUser = new this.userModel(userDto);
+    const role = user;
+    const createdUser = new this.userModel(userDto, role);
 
     createdUser.password = await hash(
       createdUser.password,

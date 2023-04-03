@@ -9,7 +9,4 @@ export class CreateSupplementDto {
   flavours: string[];
   sizes: string[];
   ingredients: string[];
-  reviews: string[];
-  order: string;
-  createdBy: string;
 }

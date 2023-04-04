@@ -19,7 +19,7 @@ export class Product {
   @Prop(String)
   image: string;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }] })
+  @Prop( [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }] )
   reviews: Review[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Order' })

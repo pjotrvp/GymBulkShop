@@ -13,15 +13,20 @@ import { CreateSupplementDto } from './dto/createSupplement.dto';
 import { UpdateSupplementDto } from './dto/updateSupplement.dto';
 import { Neo4jService } from '../../Infrastructure/neo4j/neo4j.service';
 import { UserService } from '../user/user.service';
+import { Review } from '../review/review.schema';
+import { CreateReviewDto } from '../review/dto/createReview.dto';
 
 @Injectable()
 export class SupplementService {
   constructor(
     @InjectModel(Supplement.name)
     private supplementModel: Model<SupplementDocument>,
+    @InjectModel(Review.name)
+    private reviewModel: Model<Review>,
     private readonly neo4jService: Neo4jService,
     private readonly userService: UserService
   ) {}
+
   async create(supplementDto: CreateSupplementDto): Promise<Supplement> {
     const supplement = await this.findByName(supplementDto.name);
     if (supplement) {
@@ -115,7 +120,7 @@ export class SupplementService {
     const recommendations = [];
     for (const record of result.records) {
       const name: string = record.get('name');
-      const supplement = await this.findByName( name );
+      const supplement = await this.findByName(name);
       if (supplement) {
         recommendations.push(supplement);
       }
@@ -130,4 +135,66 @@ export class SupplementService {
     );
     return this.supplementModel.findByIdAndRemove(id).exec();
   }
+
+  async findReviewsById(supplementId: string): Promise<Review[]> {
+    const supplement = this.supplementModel.findById(supplementId).exec();
+    const reviews = (await supplement).reviews;
+    return reviews;
+  }
+
+  async findSingleReviewById(
+    supplementId: string,
+    reviewId: string
+  ): Promise<Review> {
+    const supplement = await this.supplementModel.findById(supplementId).exec();
+    const review = supplement.reviews['_id'](reviewId);
+    if (!review) {
+      throw new NotFoundException(`Review with id ${reviewId} not found`);
+    }
+    return review;
+  }
+
+  async addReview(supplementId: string, reviewDto: CreateReviewDto) {
+    const supplement = await this.supplementModel.findById(supplementId).exec();
+    const currentUser = this.userService.getCurrent();
+    const review = new this.reviewModel(reviewDto, currentUser);
+    supplement.reviews.push(review);
+    await supplement.save();
+    return review;
+  }
+
+  async editReview(
+    supplementId: string,
+    reviewId: string,
+    reviewDto: CreateReviewDto
+  ) {
+    const supplement = await this.supplementModel.findById(supplementId).exec();
+    let review = supplement.reviews['_id'](reviewId);
+    if (!review) {
+      throw new NotFoundException(`Review with id ${reviewId} not found`);
+    }
+    const currentUserId = await this.userService.getCurrentId();
+    if (review.createdById !== currentUserId) {
+      throw new ForbiddenException('Can only edit owned reviews');
+    }
+    review = reviewDto;
+    await supplement.save();
+    return review;
+  }
+
+  async deleteReview(supplementId: string, reviewId: string) {
+    const supplement = await this.supplementModel.findById(supplementId).exec();
+    const review = supplement.reviews['_id'](reviewId);
+    if (!review) {
+      throw new NotFoundException(`Review with id ${reviewId} not found`);
+    }
+    const currentUserId = await this.userService.getCurrentId();
+    if (review.createdById !== currentUserId) {
+      throw new ForbiddenException('Can only delete owned reviews');
+    }
+    await review.remove();
+    await supplement.save();
+    return review;
+  }
+
 }

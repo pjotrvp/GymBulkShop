@@ -17,7 +17,7 @@ export class ReviewService {
     const createdReview = new this.reviewModel(createReviewDto);
     await this.neo4jService.write(
       `CREATE (r:Review {name: "${createdReview.title}", createdBy: "${createdReview.user}", id: "${createdReview._id}"}) 
-      MERGE (s:Supplement {id: "${createdReview.supplement}"}) MERGE (s)-[:REVIEWED]->(r)
+      MERGE (s:Product {id: "${createdReview.product}"}) MERGE (s)-[:REVIEWED]->(r)
       MERGE (u:User {id: "${createdReview.user}"}) MERGE (u)-[:CREATED]->(r) RETURN r`
     );
     return createdReview.save();
@@ -35,6 +35,10 @@ export class ReviewService {
 
   async findOne(id: number): Promise<Review> {
     return this.reviewModel.findById(id).exec();
+  }
+
+  async findBySupplementId(supplementId: string): Promise<Review[]> {
+    return this.reviewModel.find({ supplement: supplementId }).exec();
   }
 
   async remove(id: string) {

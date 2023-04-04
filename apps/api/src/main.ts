@@ -9,7 +9,7 @@ async function bootstrap() {
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   
-    const port = process.env.PORT || 3333;
+    const port = process.env.PORT || 3000;
     
     const config = new DocumentBuilder()
     .setTitle('GymBulkShop API')

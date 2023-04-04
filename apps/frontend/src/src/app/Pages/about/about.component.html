@@ -1,0 +1,135 @@
+<div class="row">
+    <div class="col-sm-6 col-md-8 col-lg-9">
+        <h3 id="aboutTitle">Over deze applicatie</h3>
+        <p>
+            Deze applicatie is gemaakt in het kader van het vak 'Clientside web
+            frameworks' van Avans Hogeschool Breda.
+        </p>
+        <h1>Gym Bulk Shop</h1>
+        <p>
+            Mijn project is gemaakt om voor sporters producten aan te kunnen bieden.
+            Ook kun je op deze website als aanbieder terecht om je producten aan te bieden,
+            een soort Bol.com dus maar dan voor sportproducten.
+        </p>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="card">
+            <div
+                class="d-flex justify-content-center align-items-center px-3 py-3"
+            >
+                <img
+                    src="../../../assets/images/rcCurls.png"
+                    class="card-img-top rounded-circle border profile-pic px-4 py-4"
+                    alt="..."
+                />
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Pjotr van Pruissen</h5>
+                <p class="card-text">Studentnummer: 2171623</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3>Entiteiten</h3>
+<p>
+    Ik heb verschillende identiteiten. Een gebruiker. Een aanbieder. en de producten die verkocht worden.
+    de producten zijn verdeeld over twee categorieën. Kit en Supplements. 
+    Kit is een machine of accessoire, iets wat je kunt gebruiken.
+    Supplement is iets wat je consumeert, sportvoeding.
+    ook komt er mogelijkheid om als klant reviews te kunnen schrijven en komen er bundles met meerdere producten.
+</p>
+
+<img src="../../../assets/images/BulkSportShopDiag-ERD.drawio.png" class="px-5 py-5" alt="..." />
+
+<div class="row">
+    <div class="col-sm-12 col-md-4">
+        <p>Supplement</p>
+        <ul>
+            <li>name: string</li>
+            <li>id: string</li>
+            <li>SupplementType: enum</li>
+            <li>ContainsLactose: boolean</li>
+            <li>IsVegan: boolean</li>
+            <li>Price, number</li>
+        </ul>
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <p>Kit</p>
+        <ul>
+            <li>name: string</li>
+            <li>id: string</li>
+            <li>type: enum</li>
+            <li>Resistance: number</li>
+            <li>Size</li>
+            <li>Price: number</li>
+        </ul>
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <p>Bundle</p>
+        <ul>
+            <li>name: string</li>
+            <li>id: string</li>
+            <li>ContainsLactose: boolean</li>
+            <li>isVegan: boolean</li>
+            <li>Price: number</li>
+        </ul>
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <p>Review</p>
+        <ul>
+            <li>Product: string</li>
+            <li>id: string</li>
+            <li>user: User</li>
+            <li>text: string</li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <h3>Userstories</h3>
+
+        <table class="table table-bordered">
+            <thead>
+                <th>Nr</th>
+                <th class="col-6">Userstory</th>
+                <th>Evt toelichting</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>
+                        Als gebruiker wil ik een overzicht van producten kunnen
+                        raadplegen, zodat ik kan zien welke producten op dit moment
+                        beschikbaar zijn.
+                    </td>
+                    <td>Overzicht is een lijst of grid</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>
+                        Als ingelogde gebruiker wil ik zelf producten in mijn winkelmandje kunnen doen,
+                        zodat ik deze later kan kopen.
+                    </td>
+                    <td>Overzicht van producten in mand is een lijst</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>
+                        Als ingelogde aanbieder wil ik producten kunnen toevoegen aan de webshop, 
+                        zodat klanten deze van mij kunnen kopen.
+                    </td>
+                    <td>In een specifieke pagina komt een form om je producten toe te voegen</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>
+                        <p>Als klant wil ik reviews kunnen schrijven zodat andere klanten weten hoe het product is</p>
+                    </td>
+                    <td>Bij elk product is een tekstvak zodat de klant een review achter kan laten</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

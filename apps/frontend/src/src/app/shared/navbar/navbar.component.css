@@ -1,0 +1,30 @@
+.nav {
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.btn {
+  padding-inline: 20px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  color: #c82e2a;
+  border: none;
+  background-color: black;
+  margin-inline: 2px;
+}
+
+.btn:hover {
+  background-color: #321111;
+}
+
+.btn:focus {
+  color: white;
+  background-color: #91202073;
+}
+
+.btn.active {
+  color: rgb(226, 226, 226);
+  background-color: #912020;
+}

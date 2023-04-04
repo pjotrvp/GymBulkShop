@@ -1,0 +1,200 @@
+<div class="product-edit-info">
+  <h2 class="subtitle">Edit - {{ supplement?.name }}</h2>
+  <a class="btn" routerLink="..">&larr; Back</a>
+  <div class="product-edit-info-form">
+    <form
+      #productEditForm="ngForm"
+      name="form"
+      (ngSubmit)="productEditForm.form.valid && editSupplement()"
+    >
+      <div class="form-group">
+        <label for="name">Supplement Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          name="name"
+          [(ngModel)]="supplement!.name"
+          #name="ngModel"
+          required
+          [ngClass]="{
+            'is-invalid': name.invalid && (name.dirty || name.touched)
+          }"
+          value="{{ supplement?.name }}"
+        />
+        <div
+          *ngIf="name.invalid && (name.dirty || name.touched)"
+          class="invalid-feedback"
+        >
+          <div *ngIf="name.errors?.['required']">Name is required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="supplementimage">Image</label>
+        <input
+          class="form-control"
+          type="file"
+          id="supplementimage"
+          name="supplementimage"
+        />
+      </div>
+      <div class="form-group">
+        <label for="supplementType">Supplement Type</label>
+        <select
+          class="form-control"
+          value="{{ supplement?.supplementType }}"
+          [(ngModel)]="supplement!.supplementType"
+          #supplementType="ngModel"
+          name="supplementType"
+          [ngClass]="{
+            'is-invalid':
+              supplementType.invalid &&
+              (supplementType.dirty || supplementType.touched)
+          }"
+          required
+        >
+          <option value="" disabled selected hidden>
+            Select Supplement Type
+          </option>
+          <option value="Vitamin">Vitamin</option>
+          <option value="Protein">Protein</option>
+          <option value="PreWorkout">Pre-Workout</option>
+          <option value="Creatine">Creatine</option>
+          <option value="Other">Other</option>
+        </select>
+        <div
+          *ngIf="
+            supplementType.invalid &&
+            (supplementType.dirty || supplementType.touched)
+          "
+          class="invalid-feedback"
+        >
+          <div *ngIf="supplementType.errors?.['required']">
+            Supplement Type is required
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="containsLactose">Contains Lactose</label>
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="containsLactose"
+          name="containsLactose"
+          [(ngModel)]="supplement!.containsLactose"
+          #containsLactose="ngModel"
+          value="{{ supplement?.containsLactose }}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="isVegan">Is Vegan</label>
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="isVegan"
+          name="isVegan"
+          [(ngModel)]="supplement!.isVegan"
+          #isVegan="ngModel"
+          value="{{ supplement?.isVegan }}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="price">Price (€)</label>
+
+        <input
+          type="number"
+          class="form-control"
+          id="price"
+          name="price"
+          [(ngModel)]="supplement!.price"
+          #price="ngModel"
+          required
+          min="1"
+          max="1000"
+          [ngClass]="{
+            'is-invalid': price.invalid && (price.dirty || price.touched)
+          }"
+          value="{{ supplement?.price }}"
+        />
+        <div
+          *ngIf="price.invalid && (price.dirty || price.touched)"
+          class="invalid-feedback"
+        >
+          <div *ngIf="price.errors?.['required']">Price is required</div>
+          <div *ngIf="price.errors?.['min']">Price must be at least 1</div>
+          <div *ngIf="price.errors?.['max']">Price must be at most 1000</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="ingredient">Ingredients</label>
+        <a class="btn action-btn add" (click)="addIngredient()">➕</a>
+        <a class="btn action-btn" (click)="removeIngredient()">➖</a>
+        <div class="multiple-inputs" *ngFor="let ing of ings; let i = index">
+          <input
+            type="text"
+            class="form-control"
+            id="ingredients"
+            name="ingredients"
+            [(ngModel)]="supplement!.ingredients"
+            #ingredients="ngModel"
+            [ngClass]="{
+              'is-invalid':
+                ingredients.invalid &&
+                (ingredients.dirty || ingredients.touched)
+            }"
+            value="{{ supplement?.ingredients?.[i] }}"
+            required
+          />
+          <div
+            *ngIf="
+              ingredients.invalid && (ingredients.dirty || ingredients.touched)
+            "
+            class="invalid-feedback"
+          >
+            <div *ngIf="ingredients.errors?.['required']">
+              1 or more ingredients are required
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="ingredient">Flavours</label>
+        <a class="btn action-btn add" (click)="addFlavour()">➕</a>
+        <a class="btn action-btn" (click)="removeFlavour()">➖</a>
+        <div class="multiple-inputs" *ngFor="let flavour of flavours">
+          <input
+            type="text"
+            class="form-control"
+            id="flavours"
+            name="flavours"
+            [(ngModel)]="supplement!.flavours"
+            #flavours="ngModel"
+            [ngClass]="{
+              'is-invalid':
+                flavours.invalid && (flavours.dirty || flavours.touched)
+            }"
+            required
+          />
+
+          <div
+            *ngIf="flavours.invalid && (flavours.dirty || flavours.touched)"
+            class="invalid-feedback"
+          >
+            <div *ngIf="flavours.errors?.['required']">
+              1 or more flavours are required
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        type="submit"
+        class="btn"
+        routerLink="/supplements/{{ supplement?._id }}"
+        (click)="editSupplement()"
+        [disabled]="productEditForm.invalid"
+      >
+        Submit
+      </button>
+    </form>
+  </div>
+</div>

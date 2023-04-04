@@ -1,0 +1,92 @@
+<div class="auth-box">
+  <h1 class="subtitle">Register</h1>
+  <form
+    #registerform="ngForm"
+    name="form"
+    (ngSubmit)="registerform.form.valid && register()"
+  >
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="user.username"
+        name="username"
+        #username="ngModel"
+        [ngClass]="{
+          'is-invalid': username.invalid && (username.dirty || username.touched)
+        }"
+        id="username"
+        placeholder="Username"
+        minlength="3"
+        maxlength="20"
+        required
+      />
+      <div *ngIf="username.errors" class="invalid-feedback">
+        <div *ngIf="username.errors?.['required']">A username is required.</div>
+        <div *ngIf="username.errors?.['minlength']">
+          Username must be at least 3 characters long.
+        </div>
+        <div *ngIf="username.errors?.['maxlength']">
+          Username cannot be more than 20 characters long.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">E-mail</label>
+      <input
+        type="email"
+        class="form-control"
+        [(ngModel)]="user.email"
+        #email="ngModel"
+        name="email"
+        id="email"
+        placeholder="E-mail"
+        required
+        [ngClass]="{
+          'is-invalid': email.invalid && (email.dirty || email.touched)
+        }"
+      />
+      <div *ngIf="email.errors" class="invalid-feedback">
+        <div *ngIf="email.errors?.['required']">An email is required.</div>
+        <div *ngIf="email.errors?.['email']">
+          Email must be a valid email address.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        [(ngModel)]="user.password"
+        #password="ngModel"
+        name="password"
+        [ngClass]="{
+          'is-invalid': password.invalid && (password.dirty || password.touched)
+        }"
+        required
+        placeholder="Password"
+        minlength="6"
+      />
+      <div *ngIf="password.errors" class="invalid-feedback">
+        <div *ngIf="password.errors?.['required']">A password is required.</div>
+        <div *ngIf="password.errors?.['minlength']">
+          Password must be at least 6 characters long.
+        </div>
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="!registerform.valid"
+      (click)="register()"
+    >
+      Register
+    </button>
+  </form>
+</div>

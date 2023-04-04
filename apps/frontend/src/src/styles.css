@@ -1,0 +1,130 @@
+/* You can add global styles to this file, and also import other style files */
+.main-title {
+  text-align: center;
+  font-size: 55px;
+}
+
+.subtitle {
+  text-align: center;
+  text-decoration: underline;
+}
+
+body {
+  background-color: rgb(66 66 66);
+  color: white;
+}
+
+.btn {
+  background-color: darkred;
+  border: 1px solid rgb(109, 2, 2);
+  border-radius: 5px;
+  padding: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: #e7e7e7;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background-color: rgb(107, 0, 0);
+}
+
+.button-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.product-page {
+  width: 100vh;
+}
+
+.product-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.product-info,
+.product-edit-info,
+.auth-box,
+.review-add {
+  background-color: rgba(204, 52, 52, 0.5);
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.product-edit-info {
+  width: 600px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.product-edit-info-form,
+.review-add-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.product-price {
+  font-size: 22px;
+}
+
+.product-title,
+.product-price,
+.subtitle,
+.main-title {
+  font-weight: bold;
+}
+
+.invalid-feedback {
+  background-color: rgb(255, 184, 184);
+  padding-inline: 3px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+input[type='number'] {
+  width: 120px;
+}
+
+.form-group {
+  margin-bottom: 8px;
+}
+
+.action-btn {
+  border-radius: 50%;
+  margin-inline: 3px;
+}
+
+.add {
+  background-color: rgb(10, 161, 10);
+  border: green;
+}
+
+.add:hover {
+  background-color: rgb(27, 141, 27);
+}
+
+.add:disabled{
+  background-color: rgb(64, 75, 64);
+  border: rgb(44, 70, 44);
+}
+
+.multiple-inputs {
+  margin-bottom: 3px;
+}
+
+.auth-box {
+  width: 350px;
+  margin: 10px;
+}
+
+.review-add {
+  width: 600px;
+  margin: 10px;
+}
+
+.review-add-title {
+  text-align: center;
+}

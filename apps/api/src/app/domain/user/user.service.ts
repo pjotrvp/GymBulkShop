@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { hash } from 'bcrypt';
 import { User, UserDocument } from './user.schema';
 import { CreateUserDto } from './dto/createUser.dto';
@@ -6,19 +6,20 @@ import { UpdateUserDto } from './dto/updateUser.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, Model } from 'mongoose';
 import { Neo4jService } from '../../Infrastructure/neo4j/neo4j.service';
+import { OrderDto } from '../order/dto/order.dto';
+import { Order, OrderDocument } from '../order/order.schema';
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
     private readonly neo4jService: Neo4jService
-  ) {
-    
-  }
+  ) {}
 
   async create(userDto: CreateUserDto): Promise<User> {
     const user = await this.findOneByEmail(userDto.email);
 
-    if(user) {
+    if (user) {
       throw new BadRequestException('User already exists');
     }
     const role = user;
@@ -72,16 +73,16 @@ export class UserService {
   }
 
   async getCurrent(): Promise<User> {
-    const user = await this.userModel.findOne({ current : true});
-    if(!user) {
+    const user = await this.userModel.findOne({ current: true });
+    if (!user) {
       throw new NotFoundException('No current user available');
     }
     return user;
   }
 
   async getCurrentId(): Promise<string> {
-    const user = await this.userModel.findOne({ current : true});
-    if(!user) {
+    const user = await this.userModel.findOne({ current: true });
+    if (!user) {
       throw new NotFoundException('No current user available');
     }
     const userId = user['_id'].toString();
@@ -90,18 +91,66 @@ export class UserService {
 
   async findOneByEmail(email: string): Promise<User> {
     const user = await this.userModel.findOne({ email });
-    return user
+    return user;
   }
 
   async remove(id: string) {
     const user = await this.userModel.findById(id);
-    if(!user) {
+    if (!user) {
       throw new NotFoundException('User not found');
     }
     await this.neo4jService.write(
       `MATCH (u:User {id: "${id}"}) DETACH DELETE u`
     );
-    
+
     return user.delete();
+  }
+
+  async createOrder(orderDto: OrderDto): Promise<Order> {
+    const createdOrder = new this.orderModel(orderDto);
+    await this.neo4jService.write(
+      `MATCH (u:User {id: $userId}), (s:Supplement {id: $supplementId}))
+      CREATE (u)-[:ORDERED]->(s)`
+    );
+    return createdOrder.save();
+  }
+
+  async updateOrder(id: string, orderDto: OrderDto): Promise<Order> {
+    const currentUserId = await this.getCurrentId();
+    const orderCreatedById = (await this.findOneOrder(id)).createdById;
+
+    if (currentUserId !== orderCreatedById) {
+      throw new HttpException(
+        'Can only edit owned orders',
+        HttpStatus.FORBIDDEN
+      );
+    }
+    return this.orderModel
+      .findByIdAndUpdate(id, orderDto, { new: true })
+      .exec();
+  }
+
+  async findAllOrder(): Promise<Order[]> {
+    return this.orderModel.find().exec();
+  }
+
+  async findOneOrder(id: string): Promise<Order> {
+    return this.orderModel.findById(id).exec();
+  }
+
+  async removeOrder(id: string) {
+    const currentUserId = await this.getCurrentId();
+    const orderCreatedById = (await this.orderModel.findById(id)).createdById;
+
+    if (currentUserId !== orderCreatedById) {
+      throw new HttpException(
+        'Can only edit owned orders',
+        HttpStatus.FORBIDDEN
+      );
+    }
+    await this.neo4jService.write(
+      `MATCH (s:Supplement {id: "${id}"}) DETACH DELETE s`
+    );
+    return this.orderModel.findByIdAndRemove(id).exec();
   }
 }

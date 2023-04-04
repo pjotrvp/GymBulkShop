@@ -1,5 +1,10 @@
-export class UpdateReviewDto{
-    rating: number;
-    description: string;
-    title: string;
+import { ApiProperty } from '@nestjs/swagger';
+
+export class UpdateReviewDto {
+  @ApiProperty()
+  rating: number;
+  @ApiProperty()
+  description: string;
+  @ApiProperty()
+  title: string;
 }

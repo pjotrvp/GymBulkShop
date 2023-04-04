@@ -1,12 +1,20 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export class UpdateSupplementDto {
-    name?: string;
-    supplementType?: string;
-    containsLactose?: boolean;
-    isVegan?: boolean;
-    price?: number;
-    flavours?: string[];
-    sizes?: string[];
-    ingredients?: string[];
-    reviews?: string[];
-    order?: string;
+  @ApiProperty()
+  name?: string;
+  @ApiProperty()
+  supplementType?: string;
+  @ApiProperty()
+  containsLactose?: boolean;
+  @ApiProperty()
+  isVegan?: boolean;
+  @ApiProperty()
+  price?: number;
+  @ApiProperty()
+  flavours?: string[];
+  @ApiProperty()
+  sizes?: string[];
+  @ApiProperty()
+  ingredients?: string[];
 }

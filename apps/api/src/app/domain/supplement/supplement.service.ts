@@ -95,7 +95,7 @@ export class SupplementService {
     return this.supplementModel.find().exec();
   }
 
-  async findOne(id: number): Promise<Supplement> {
+  async findOne(id: string): Promise<Supplement> {
     return this.supplementModel.findById(id).exec();
   }
 
@@ -130,6 +130,10 @@ export class SupplementService {
   }
 
   async remove(id: string) {
+    const supplement = await this.supplementModel.findById(id);
+    if (!supplement) {
+      throw new NotFoundException(`Supplement with id ${id} not found`);
+    }
     await this.neo4jService.write(
       `MATCH (s:Supplement {id: "${id}"}) DETACH DELETE s`
     );

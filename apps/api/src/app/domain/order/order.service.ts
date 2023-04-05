@@ -12,7 +12,6 @@ import { UserService } from '../user/user.service';
 export class OrderService {
   constructor(
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
-    private readonly neo4jService: Neo4jService,
   ) {
     console.log('OrderService: ', Order);
   }

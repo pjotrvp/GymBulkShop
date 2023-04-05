@@ -11,6 +11,7 @@ import {
   NEO4J_DRIVER,
 } from '../../infrastructure/neo4j/neo4j.constants';
 import { UserModule } from './user.module';
+import { Order, OrderSchema } from '../order/order.schema';
 describe('UserService', () => {
   let service: UserService;
   let userModel: Model<UserDocument>;
@@ -29,7 +30,8 @@ describe('UserService', () => {
             return { uri };
           },
         }),
-        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+        MongooseModule.forFeature([{ name: User.name, schema: UserSchema },
+        {name: Order.name, schema: OrderSchema}]),
         UserModule,
       ],
       providers: [

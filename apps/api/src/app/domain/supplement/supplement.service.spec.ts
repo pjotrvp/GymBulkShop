@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongoClient } from 'mongodb';
 import { Supplement, SupplementSchema } from './supplement.schema';
+import { Review, ReviewSchema } from '../review/review.schema';
 import { getModelToken, MongooseModule } from '@nestjs/mongoose';
 import { SupplementModule } from './supplement.module';
 import { Neo4jService } from '../../Infrastructure/neo4j/neo4j.service';
@@ -15,7 +16,11 @@ import { UserService } from '../user/user.service';
 import { AuthService } from '../../auth/auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { ReviewModule } from '../review/review.module';
+import { OrderModule } from '../order/order.module';
+import { Order, OrderSchema } from '../order/order.schema';
+
 describe('SupplementService', () => {
   let service: SupplementService;
   let userService: UserService;
@@ -45,8 +50,12 @@ describe('SupplementService', () => {
         }),
         MongooseModule.forFeature([
           { name: Supplement.name, schema: SupplementSchema },
+          { name: Review.name, schema : ReviewSchema},
+          { name: Order.name, schema: OrderSchema}
         ]),
         SupplementModule,
+        ReviewModule,
+        OrderModule
       ],
       providers: [
         SupplementService,
@@ -132,6 +141,12 @@ describe('SupplementService', () => {
       image: 'test.png',
     };
 
+    const testReview = {
+      title: 'Great product',
+      description: 'I love this product',
+      rating: 5,
+    }
+
     const testUser2 = {
       name: 'Egídio Jens',
       email: 'egidio@proton.me',
@@ -184,6 +199,11 @@ describe('SupplementService', () => {
       const result = await service.findByName(testSupplement.name);
       expect(result.name).toEqual(testSupplement.name);
     });
+
+    it('should return a supplement by id(supplement does not exist)', async () => {
+      await expect(service.findOne('5f9f9d9f9d9d9d9d9d9d9d9d'))
+      .rejects.toEqual(new NotFoundException('Supplement not found'))
+    })
   });
 
   afterEach(async () => {

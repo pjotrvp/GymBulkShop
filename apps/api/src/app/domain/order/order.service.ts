@@ -1,39 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order, OrderDocument } from './order.schema';
 import { OrderDto } from './dto/order.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { Neo4jService } from 'nest-neo4j/dist/neo4j.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class OrderService {
   constructor(
-    @InjectModel(Order.name) private orderModel: Model<OrderDocument>
+    @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
   ) {
-    console.log('OrderService: ', Order);
+    
   }
 
-  async create(orderDto: OrderDto): Promise<Order> {
-    const createdOrder = new this.orderModel(orderDto);
-    return createdOrder.save();
-  }
-
-  async update(id: string, orderDto: OrderDto): Promise<Order> {
-    return this.orderModel
-      .findByIdAndUpdate(id, orderDto, { new: true })
-      .exec();
-  }
-
-  async findAll(): Promise<Order[]> {
-    return this.orderModel.find().exec();
-  }
-
-  async findOne(id: number): Promise<Order> {
-    return this.orderModel.findById(id).exec();
-  }
-
-  async remove(id: string) {
-    return this.orderModel.findByIdAndRemove(id).exec();
-  }
+  
 }

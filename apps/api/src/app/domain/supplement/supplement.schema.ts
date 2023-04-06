@@ -1,6 +1,7 @@
-import mongoose, { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument, SchemaTypes, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Product } from '../product/product.schema';
+import { User, UserDocument } from '../user/user.schema';
 
 const SupplementType = {
   values: [
@@ -29,13 +30,16 @@ export class Supplement extends Product {
   @Prop(Boolean)
   isVegan: boolean;
 
-  @Prop(String)
+  @Prop([String])
   flavours: string[];
 
-  @Prop(String)
+  @Prop([String])
   sizes: string[];
 
-  @Prop(String)
+  @Prop([String])
   ingredients: string[];
+
+  @Prop({ type: SchemaTypes.ObjectId, ref: User.name })
+  createdById: Types.ObjectId['_id'];
 }
 export const SupplementSchema = SchemaFactory.createForClass(Supplement);

@@ -19,7 +19,7 @@
 }
 .product-card:hover {
   cursor: pointer;
-  background-color: rgb(105, 2, 2);
+  background-color: rgb(126, 3, 3);
   scale: 1.02;
 }
 
@@ -39,4 +39,3 @@
   width: 230px;
   margin-inline: auto;
 }
-

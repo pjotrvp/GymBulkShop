@@ -1,0 +1,61 @@
+<div class="auth-box">
+  <h1 class="subtitle">Login</h1>
+  <form #loginform="ngForm" name="form" (ngSubmit)="loginform.valid && login()">
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        class="form-control"
+        [(ngModel)]="user.email"
+        name="email"
+        #email="ngModel"
+        [ngClass]="{
+          'is-invalid': email.invalid && (email.dirty || email.touched)
+        }"
+        id="email"
+        placeholder="Email"
+        required
+      />
+      <div *ngIf="email.errors" class="invalid-feedback">
+        <div *ngIf="email.errors?.['required']">An email is required.</div>
+        <div *ngIf="email.errors?.['email']">
+          Email must be a valid email address.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        [(ngModel)]="user.password"
+        name="current-password"
+        #password="ngModel"
+        [ngClass]="{
+          'is-invalid': password.invalid && (password.dirty || password.touched)
+        }"
+        id="current-password"
+        placeholder="Password"
+        autocomplete="on"
+        required
+        minlength="6"
+      />
+      <div *ngIf="password.errors" class="invalid-feedback">
+        <div *ngIf="password.errors?.['required']">A password is required.</div>
+        <div *ngIf="password.errors?.['minlength']">
+          Password must be at least 6 characters long.
+        </div>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="login()"
+      [disabled]="!loginform.valid"
+    >
+      Login
+    </button>
+  </form>
+</div>

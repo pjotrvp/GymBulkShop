@@ -16,10 +16,11 @@ import { UserService } from '../user/user.service';
 import { AuthService } from '../../auth/auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { ReviewModule } from '../review/review.module';
 import { OrderModule } from '../order/order.module';
 import { Order, OrderSchema } from '../order/order.schema';
+import { disconnect } from 'process';
 
 describe('SupplementService', () => {
   let service: SupplementService;
@@ -31,6 +32,7 @@ describe('SupplementService', () => {
   let jwtToken: string;
   let currentUserId: string;
   let currentUser: User;
+  let testSupplement5: Supplement;
   beforeAll(async () => {
     let uri: string;
 
@@ -92,6 +94,7 @@ describe('SupplementService', () => {
       password: '123456',
       reviews: [],
       orders: [],
+      supplements: [],
       role: 'user',
     };
     await userService.create(testUser);
@@ -99,6 +102,7 @@ describe('SupplementService', () => {
     currentUser = await userService.findOneByEmail(testUser.email);
     currentUserId = currentUser['_id'];
     await mongoClient.db().collection('supplements').deleteMany({});
+    
   });
 
   describe('SupplementService', () => {
@@ -141,11 +145,24 @@ describe('SupplementService', () => {
       image: 'test.png',
     };
 
+    const testSupplement5 = {
+      name: 'Whey protein isolate mysupps',
+      description: 'great protein powder from mysupps',
+      supplementType: 'protein',
+      containsLactose: true,
+      isVegan: false,
+      price: 10,
+      flavours: ['chocolate', 'vanilla'],
+      sizes: ['1kg', '2kg'],
+      ingredients: ['whey protein isolate', 'soy lecithin'],
+      image: 'test.png',
+    };
+
     const testReview = {
       title: 'Great product',
       description: 'I love this product',
       rating: 5,
-    }
+    };
 
     const testUser2 = {
       name: 'Egídio Jens',
@@ -153,6 +170,7 @@ describe('SupplementService', () => {
       password: '123456rc',
       reviews: [],
       orders: [],
+      supplements: [],
       role: 'user',
     };
 
@@ -163,21 +181,23 @@ describe('SupplementService', () => {
 
     it('should create supplement(supplement already exists)', async () => {
       await service.create(testSupplement);
-      await expect(service.create(testSupplementCopy))
-      .rejects.toEqual(new BadRequestException('Supplement with this name already exists'))
+      await expect(service.create(testSupplementCopy)).rejects.toEqual(
+        new BadRequestException('Supplement with this name already exists')
+      );
     });
 
     it('should update a supplement', async () => {
-        const supplement = await service.create(testSupplement);
-        const result = await service.update(supplement['_id'], testSupplement2);
-        expect(result.name).toEqual(testSupplement2.name);
+      const supplement = await service.create(testSupplement);
+      const result = await service.update(supplement['_id'], testSupplement2);
+      expect(result.name).toEqual(testSupplement2.name);
     });
 
+
     it('should delete a supplement', async () => {
-        const supplement = await service.create(testSupplement);
-        await service.remove(supplement['_id']);
-        const result = await service.findAll();
-        expect(result).toHaveLength(0);
+      const supplement = await service.create(testSupplement);
+      await service.remove(supplement['_id']);
+      const result = await service.findAll();
+      expect(result).toHaveLength(0);
     });
 
     it('should return an array of supplements', async () => {
@@ -195,15 +215,19 @@ describe('SupplementService', () => {
     });
 
     it('should return a supplement by name', async () => {
-      await service.create(testSupplement);
-      const result = await service.findByName(testSupplement.name);
+      const supplement = await service.create(testSupplement);
+      const result = await service.findByName(supplement.name);
       expect(result.name).toEqual(testSupplement.name);
     });
 
     it('should return a supplement by id(supplement does not exist)', async () => {
-      await expect(service.findOne('5f9f9d9f9d9d9d9d9d9d9d9d'))
-      .rejects.toEqual(new NotFoundException('Supplement not found'))
-    })
+      await service.create(testSupplement);
+      await expect(service.findOne('6426900b98af64da68405b83')).rejects.toThrow(
+        new NotFoundException(
+          'Supplement with ID 6426900b98af64da68405b83 not found'
+        )
+      );
+    });
   });
 
   afterEach(async () => {

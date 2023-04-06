@@ -11,7 +11,7 @@ export class ReviewService {
     @InjectModel(Review.name) private reviewModel: Model<ReviewDocument>,
     private readonly neo4jService: Neo4jService
   ) {
-    console.log('ReviewService: ', Review);
+    
   }
   async create(createReviewDto: CreateReviewDto): Promise<Review> {
     const createdReview = new this.reviewModel(createReviewDto);

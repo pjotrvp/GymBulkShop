@@ -71,6 +71,7 @@ describe('AuthService', () => {
     role: 'user',
     reviews: [],
     orders: [],
+    supplements: [],
   };
 
   beforeEach(async () => {

@@ -4,7 +4,7 @@ import { User, UserDocument } from './user.schema';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { isValidObjectId, Model } from 'mongoose';
+import { isValidObjectId, Model, ObjectId, Types } from 'mongoose';
 import { Neo4jService } from '../../Infrastructure/neo4j/neo4j.service';
 import { OrderDto } from '../order/dto/order.dto';
 import { Order, OrderDocument } from '../order/order.schema';
@@ -80,12 +80,12 @@ export class UserService {
     return user;
   }
 
-  async getCurrentId(): Promise<string> {
+  async getCurrentId(): Promise<ObjectId> {
     const user = await this.userModel.findOne({ current: true });
     if (!user) {
       throw new NotFoundException('No current user available');
     }
-    const userId = user['_id'].toString();
+    const userId = user.id;
     return userId;
   }
 
@@ -117,9 +117,11 @@ export class UserService {
 
   async updateOrder(id: string, orderDto: OrderDto): Promise<Order> {
     const currentUserId = await this.getCurrentId();
-    const orderCreatedById = (await this.findOneOrder(id)).createdById;
+    const order = await this.orderModel.findById(id);
+    const orderObject = order.toObject();
+    const createdById = orderObject.createdById.toString()
 
-    if (currentUserId !== orderCreatedById) {
+    if (new Types.ObjectId(createdById).toString() !== currentUserId.toString()) {
       throw new HttpException(
         'Can only edit owned orders',
         HttpStatus.FORBIDDEN
@@ -140,9 +142,13 @@ export class UserService {
 
   async removeOrder(id: string) {
     const currentUserId = await this.getCurrentId();
-    const orderCreatedById = (await this.orderModel.findById(id)).createdById;
+    const order = await this.orderModel.findById(id);
+    const orderObject = order.toObject();
+    const createdById = orderObject.createdById.toString();
 
-    if (currentUserId !== orderCreatedById) {
+    if (
+      new Types.ObjectId(createdById).toString() !== currentUserId.toString()
+    ) {
       throw new HttpException(
         'Can only edit owned orders',
         HttpStatus.FORBIDDEN

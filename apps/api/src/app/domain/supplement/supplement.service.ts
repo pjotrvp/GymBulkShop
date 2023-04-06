@@ -7,7 +7,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Supplement, SupplementDocument } from './supplement.schema';
-import { Model } from 'mongoose';
+import { Model, ObjectId, Types } from 'mongoose';
+import { ObjectId as MongoObjectId } from 'mongodb';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateSupplementDto } from './dto/createSupplement.dto';
 import { UpdateSupplementDto } from './dto/updateSupplement.dto';
@@ -15,6 +16,7 @@ import { Neo4jService } from '../../Infrastructure/neo4j/neo4j.service';
 import { UserService } from '../user/user.service';
 import { Review } from '../review/review.schema';
 import { CreateReviewDto } from '../review/dto/createReview.dto';
+import { User } from '../user/user.schema';
 
 @Injectable()
 export class SupplementService {
@@ -23,47 +25,53 @@ export class SupplementService {
     private supplementModel: Model<SupplementDocument>,
     @InjectModel(Review.name)
     private reviewModel: Model<Review>,
+    @InjectModel(User.name)
+    private userModel: Model<User>,
     private readonly neo4jService: Neo4jService,
     private readonly userService: UserService
   ) {}
 
   async create(supplementDto: CreateSupplementDto): Promise<Supplement> {
-    const supplement = await this.findByName(supplementDto.name);
+    const name = supplementDto.name;
+    const supplement = await this.supplementModel.findOne({ name });
     if (supplement) {
       throw new BadRequestException('Supplement with this name already exists');
     }
+
     const currentUser = this.userService.getCurrent();
-    const createdBy: string = currentUser['_id'];
-    const createdSupplement = new this.supplementModel(
-      supplementDto,
-      createdBy
+    
+    const createdById: MongoObjectId = currentUser['_id'];
+    
+    const createdSupplement = new this.supplementModel({
+      ...supplementDto, 
+    });
+
+    createdSupplement.createdById = createdById;
+    
+    await createdSupplement.save();
+    
+    // Add the supplement reference to the user's supplements array
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      currentUser['_id'],
+      { $push: { supplements: createdSupplement._id } },
+      { new: true }
     );
+
     if (createdSupplement.$isValid) {
       const query = `
-      CREATE (s:Supplement {
-        name: "${createdSupplement.name}",
-        createdBy: "${currentUser['name']}",
-        id: "${createdSupplement._id}"
-      })
-      MERGE (u:User { id: "${currentUser['_id']}" })
-      MERGE (u)-[:CREATED]->(s)
-      RETURN s
-    `;
+    CREATE (s:Supplement {
+      name: "${createdSupplement.name}",
+      createdBy: "${currentUser['name']}",
+      id: "${createdSupplement._id}"
+    })
+    MERGE (u:User { id: "${currentUser['_id']}" })
+    MERGE (u)-[:CREATED]->(s)
+    RETURN s
+  `;
       await this.neo4jService.write(query);
     }
 
-    const session = await this.supplementModel.startSession();
-    session.startTransaction();
-    try {
-      const savedSupplement = await createdSupplement.save({ session });
-      await session.commitTransaction();
-      return savedSupplement;
-    } catch (error) {
-      await session.abortTransaction();
-      throw error;
-    } finally {
-      session.endSession();
-    }
+    return createdSupplement;
   }
 
   async update(
@@ -74,9 +82,14 @@ export class SupplementService {
     if (!supplement) {
       throw new NotFoundException(`Supplement with id ${id} not found`);
     }
+    const currentUser = this.userService.getCurrent();
 
+    const createdById = await this.userService.getCurrentId();
     const currentUserId = await this.userService.getCurrentId();
-    if (supplement.createdById !== currentUserId) {
+
+    if (
+      createdById !== currentUserId
+    ) {
       throw new ForbiddenException('Can only edit owned supplements');
     }
 
@@ -96,11 +109,18 @@ export class SupplementService {
   }
 
   async findOne(id: string): Promise<Supplement> {
-    return this.supplementModel.findById(id).exec();
+    const supplement = await this.supplementModel.findOne({ _id: id}).exec();
+    if (!supplement) {
+      throw new NotFoundException(`Supplement with ID ${id} not found`);
+    }
+    return supplement;
   }
 
   async findByName(name: string): Promise<Supplement> {
     const supplement = await this.supplementModel.findOne({ name });
+    if (!supplement) {
+      throw new NotFoundException(`Supplement with name ${name} not found`);
+    }
     return supplement;
   }
   async findRecommendations(id: string): Promise<Supplement[]> {
@@ -134,6 +154,17 @@ export class SupplementService {
     if (!supplement) {
       throw new NotFoundException(`Supplement with id ${id} not found`);
     }
+
+    
+
+    const createdById = await this.userService.getCurrentId();
+    console.log('createdById', createdById);
+    const currentUserId = await this.userService.getCurrentId();
+    console.log('currentUserId', currentUserId);
+    if (createdById !== currentUserId) {
+      throw new ForbiddenException('Can only edit owned supplements');
+    }
+
     await this.neo4jService.write(
       `MATCH (s:Supplement {id: "${id}"}) DETACH DELETE s`
     );
@@ -200,5 +231,4 @@ export class SupplementService {
     await supplement.save();
     return review;
   }
-
 }

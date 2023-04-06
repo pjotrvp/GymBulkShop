@@ -13,7 +13,7 @@ export class OrderService {
   constructor(
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
   ) {
-    console.log('OrderService: ', Order);
+    
   }
 
   

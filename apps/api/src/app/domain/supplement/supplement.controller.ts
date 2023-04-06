@@ -43,15 +43,6 @@ export class SupplementController {
     @Param('id') params,
     supplementDto: UpdateSupplementDto
   ): Promise<Supplement> {
-    if (
-      (await this.userService.getCurrentId()) !==
-      (await this.supplementService.findOne(params.id)).createdById
-    ) {
-      throw new HttpException(
-        'Can only edit owned supplements',
-        HttpStatus.FORBIDDEN
-      );
-    }
     return this.supplementService.update(params.id, supplementDto);
   }
 
@@ -77,15 +68,6 @@ export class SupplementController {
   @ApiOperation({ summary: 'remove a supplement' })
   @Delete(':id')
   async remove(@Param() params): Promise<Supplement> {
-    if (
-      (await this.userService.getCurrentId()) !==
-      (await this.supplementService.findOne(params.id)).createdById
-    ) {
-      throw new HttpException(
-        'Can only delete owned supplements',
-        HttpStatus.FORBIDDEN
-      );
-    }
     return this.supplementService.remove(params.id);
   }
 

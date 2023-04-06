@@ -8,6 +8,7 @@ import { AuthModule } from '../../auth/auth.module';
 import { UserModule } from '../user/user.module';
 import { ReviewModule } from '../review/review.module';
 import { Review, ReviewSchema } from '../review/review.schema';
+import { User, UserSchema } from '../user/user.schema';
 
 
 @Module({
@@ -15,6 +16,7 @@ import { Review, ReviewSchema } from '../review/review.schema';
     MongooseModule.forFeature([
       { name: Supplement.name, schema: SupplementSchema },
       { name: Review.name, schema: ReviewSchema},
+      { name: User.name, schema: UserSchema}
     ]),
     Neo4jModule, AuthModule, UserModule, ReviewModule,
   ],

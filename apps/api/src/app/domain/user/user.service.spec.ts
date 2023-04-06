@@ -12,6 +12,7 @@ import {
 } from '../../infrastructure/neo4j/neo4j.constants';
 import { UserModule } from './user.module';
 import { Order, OrderSchema } from '../order/order.schema';
+import { BadRequestException } from '@nestjs/common';
 describe('UserService', () => {
   let service: UserService;
   let userModel: Model<UserDocument>;
@@ -116,6 +117,13 @@ describe('UserService', () => {
       const result = await service.findOne(createdUser['_id']);
       expect(result.name).toEqual(testUser.name);
     });
+
+    it('should create one user (user already exists)', async () => {
+      await service.create(testUser);
+      await expect(service.create(testUser)).rejects.toEqual(
+        new BadRequestException('User already exists')
+      );
+    })
 
     it('findOne invalid object id should return User not found error', async () => {
       try {

@@ -19,6 +19,7 @@
           [ngClass]="{
             'is-invalid': name.invalid && (name.dirty || name.touched)
           }"
+          placeholder="Supplement Name"
           required
         />
         <div
@@ -26,6 +27,34 @@
           class="invalid-feedback"
         >
           <div *ngIf="name.errors?.['required']">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          rows="3"
+          class="form-control"
+          id="description"
+          name="description"
+          [(ngModel)]="supplement!.description"
+          #description="ngModel"
+          [ngClass]="{
+            'is-invalid':
+              description.invalid && (description.dirty || description.touched)
+          }"
+          placeholder="Description"
+          required
+        ></textarea>
+        <div
+          *ngIf="
+            description.invalid && (description.dirty || description.touched)
+          "
+          class="invalid-feedback"
+        >
+          <div *ngIf="description.errors?.['required']">
+            A description is required
+          </div>
         </div>
       </div>
 
@@ -123,7 +152,7 @@
         <label for="ingredient">Ingredients</label>
         <a class="btn action-btn add" (click)="addIngredient()">➕</a>
         <a class="btn action-btn" (click)="removeIngredient()">➖</a>
-        <div class="multiple-inputs" *ngFor="let ing of ings">
+        <div class="multiple-inputs" *ngFor="let ing of ingredients">
           <input
             type="text"
             class="form-control"
@@ -136,6 +165,7 @@
                 ingredients.invalid &&
                 (ingredients.dirty || ingredients.touched)
             }"
+            placeholder="Ingredient"
             required
           />
           <div
@@ -167,6 +197,7 @@
               'is-invalid':
                 flavours.invalid && (flavours.dirty || flavours.touched)
             }"
+            placeholder="Flavour"
             required
           />
 

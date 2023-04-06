@@ -53,9 +53,6 @@
           }"
           required
         >
-          <option value="" disabled selected hidden>
-            Select Supplement Type
-          </option>
           <option value="Vitamin">Vitamin</option>
           <option value="Protein">Protein</option>
           <option value="PreWorkout">Pre-Workout</option>
@@ -129,7 +126,10 @@
         <label for="ingredient">Ingredients</label>
         <a class="btn action-btn add" (click)="addIngredient()">➕</a>
         <a class="btn action-btn" (click)="removeIngredient()">➖</a>
-        <div class="multiple-inputs" *ngFor="let ing of ings; let i = index">
+        <div
+          class="multiple-inputs"
+          *ngFor="let ing of ingredients; let i = index"
+        >
           <input
             type="text"
             class="form-control"
@@ -187,7 +187,7 @@
         </div>
       </div>
       <button
-        type="submit"
+        type="button"
         class="btn"
         routerLink="/supplements/{{ supplement?._id }}"
         (click)="editSupplement()"

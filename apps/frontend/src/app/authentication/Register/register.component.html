@@ -6,29 +6,29 @@
     (ngSubmit)="registerform.form.valid && register()"
   >
     <div class="form-group">
-      <label for="username">Username</label>
+      <label for="name">name</label>
       <input
         type="text"
         class="form-control"
-        [(ngModel)]="user.username"
-        name="username"
-        #username="ngModel"
+        [(ngModel)]="user.name"
+        name="name"
+        #name="ngModel"
         [ngClass]="{
-          'is-invalid': username.invalid && (username.dirty || username.touched)
+          'is-invalid': name.invalid && (name.dirty || name.touched)
         }"
-        id="username"
-        placeholder="Username"
+        id="name"
+        placeholder="name"
         minlength="3"
         maxlength="20"
         required
       />
-      <div *ngIf="username.errors" class="invalid-feedback">
-        <div *ngIf="username.errors?.['required']">A username is required.</div>
-        <div *ngIf="username.errors?.['minlength']">
-          Username must be at least 3 characters long.
+      <div *ngIf="name.errors" class="invalid-feedback">
+        <div *ngIf="name.errors?.['required']">A name is required.</div>
+        <div *ngIf="name.errors?.['minlength']">
+          name must be at least 3 characters long.
         </div>
-        <div *ngIf="username.errors?.['maxlength']">
-          Username cannot be more than 20 characters long.
+        <div *ngIf="name.errors?.['maxlength']">
+          name cannot be more than 20 characters long.
         </div>
       </div>
     </div>
@@ -81,7 +81,7 @@
     </div>
 
     <button
-      type="submit"
+      type="button"
       class="btn btn-primary"
       [disabled]="!registerform.valid"
       (click)="register()"

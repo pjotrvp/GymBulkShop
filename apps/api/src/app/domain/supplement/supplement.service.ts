@@ -84,7 +84,7 @@ export class SupplementService {
     }
     const currentUser = this.userService.getCurrent();
 
-    const createdById = await this.userService.getCurrentId();
+    const createdById: MongoObjectId = supplement.createdById;
     const currentUserId = await this.userService.getCurrentId();
 
     if (
@@ -157,12 +157,10 @@ export class SupplementService {
 
     
 
-    const createdById = await this.userService.getCurrentId();
-    console.log('createdById', createdById);
+    const createdById: MongoObjectId = supplement.createdById;
     const currentUserId = await this.userService.getCurrentId();
-    console.log('currentUserId', currentUserId);
     if (createdById !== currentUserId) {
-      throw new ForbiddenException('Can only edit owned supplements');
+      throw new ForbiddenException('Can only remove owned supplements');
     }
 
     await this.neo4jService.write(

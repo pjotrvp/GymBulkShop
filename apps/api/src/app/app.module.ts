@@ -6,7 +6,6 @@ import { SupplementModule } from './domain/supplement/supplement.module';
 import { UserModule } from './domain/user/user.module';
 import { ReviewModule } from './domain/review/review.module';
 import { OrderModule } from './domain/order/order.module';
-import { KitModule } from './domain/kit/kit.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Neo4jModule } from 'nest-neo4j';
 
@@ -26,7 +25,6 @@ import { Neo4jModule } from 'nest-neo4j';
     UserModule,
     ReviewModule,
     OrderModule,
-    KitModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,5 +1,3 @@
-import { Supplement } from '../supplement/supplement.schema';
-import { Kit } from '../kit/kit.schema';
 import { User } from '../user/user.schema';
 import mongoose, { HydratedDocument, SchemaTypes } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';

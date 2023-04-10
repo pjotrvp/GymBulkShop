@@ -32,7 +32,7 @@ export class BundleController {
 
   @ApiOperation({ summary: 'get recommended bundles' })
   @Get(':id/recommendations')
-  async recommendations(@Param() params): Promise<any> {
+  async recommendations(@Param() params): Promise<Bundle[]> {
     return this.bundleService.findRecommendations(params.id);
   }
 
@@ -53,6 +53,20 @@ export class BundleController {
   @Delete(':id')
   async remove(@Param() params): Promise<Bundle> {
     return this.bundleService.remove(params.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'add a product to a bundle' })
+  @Post(':id/products/:productId')
+  async addProduct(@Param() params): Promise<Bundle> {
+    return this.bundleService.addProduct(params.id, params.productId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'remove a product from a bundle' })
+  @Delete(':id/products/:productId')
+  async removeProduct(@Param() params): Promise<Bundle> {
+    return this.bundleService.removeProduct(params.id, params.productId);
   }
 
   @ApiOperation({ summary: 'get the reviews for a bundle' })

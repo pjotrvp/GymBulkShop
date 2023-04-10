@@ -13,6 +13,7 @@ import { User } from '../user/user.schema';
 import { CreateBundleDto } from './dto/createBundle.dto';
 import { UserService } from '../user/user.service';
 import { Neo4jService } from '../../Infrastructure/neo4j/neo4j.service';
+import { CreateReviewDto } from '../review/dto/createReview.dto';
 
 @Injectable()
 export class BundleService {
@@ -169,23 +170,84 @@ export class BundleService {
     return updatedBundle;
   }
 
-    async removeProduct(bundleId: string, productId: string): Promise<Bundle> {
+  async removeProduct(bundleId: string, productId: string): Promise<Bundle> {
     const bundle = await this.bundleModel.findById(bundleId);
     if (!bundle) {
-        throw new NotFoundException(`Bundle with id ${bundleId} not found`);
-        }
-        const createdById: MongoObjectId = bundle.createdById;
-        const currentUserId = await this.userService.getCurrentId();
-        if(createdById !== currentUserId) {
-            throw new ForbiddenException('Can only edit owned bundles');
-        }
-        const updatedBundle = await this.bundleModel
-        .findByIdAndUpdate(
-            bundleId,
-            { $pull: { products: productId } },
-            { new: true }
-        )
-        .exec();
-        return updatedBundle;
+      throw new NotFoundException(`Bundle with id ${bundleId} not found`);
     }
+    const createdById: MongoObjectId = bundle.createdById;
+    const currentUserId = await this.userService.getCurrentId();
+    if (createdById !== currentUserId) {
+      throw new ForbiddenException('Can only edit owned bundles');
+    }
+    const updatedBundle = await this.bundleModel
+      .findByIdAndUpdate(
+        bundleId,
+        { $pull: { products: productId } },
+        { new: true }
+      )
+      .exec();
+    return updatedBundle;
+  }
+
+  async createReview(bundleId: string, reviewDto: CreateReviewDto) {
+    const bundle = await this.bundleModel.findById(bundleId).exec();
+    const currentUser = this.userService.getCurrent();
+    const review = new this.reviewModel(reviewDto, currentUser['_id']);
+    bundle.reviews.push(review);
+    await bundle.save();
+    return review;
+  }
+
+  async findReviewsById(bundleId: string): Promise<Review[]> {
+    const bundle = this.bundleModel.findById(bundleId).exec();
+    const reviews = (await bundle).reviews;
+    return reviews;
+  }
+
+  async findSingleReviewById(
+    bundleId: string,
+    reviewId: string
+  ): Promise<Review> {
+    const bundle = await this.bundleModel.findById(bundleId).exec();
+    const review = bundle.reviews['_id'](reviewId);
+    if (!review) {
+      throw new NotFoundException(`Review with id ${reviewId} not found`);
+    }
+    return review;
+  }
+
+  async updateReview(
+    bundleId: string,
+    reviewId: string,
+    reviewDto: CreateReviewDto
+  ) {
+    const bundle = await this.bundleModel.findById(bundleId).exec();
+    let review = bundle.reviews['_id'](reviewId);
+    if (!review) {
+      throw new NotFoundException(`Review with id ${reviewId} not found`);
+    }
+    const currentUserId = await this.userService.getCurrentId();
+    if (review.createdById !== currentUserId) {
+      throw new ForbiddenException('Can only edit owned reviews');
+    }
+    review = reviewDto;
+    await bundle.save();
+    return review;
+  }
+
+  async deleteReview(bundleId: string, reviewId: string) {
+    const bundle = await this.bundleModel.findById(bundleId).exec();
+    const review = bundle.reviews['_id'](reviewId);
+    if (!review) {
+      throw new NotFoundException(`Review with id ${reviewId} not found`);
+    }
+    const currentUserId = await this.userService.getCurrentId();
+    if (review.createdById !== currentUserId) {
+      throw new ForbiddenException('Can only delete owned reviews');
+    }
+    await review.remove();
+    await bundle.save();
+    return review;
+  }
 }

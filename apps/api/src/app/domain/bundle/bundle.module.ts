@@ -7,6 +7,8 @@ import { ReviewModule } from '../review/review.module';
 import { Bundle, BundleSchema } from './bundle.schema';
 import { Review, ReviewSchema } from '../review/review.schema';
 import { User, UserSchema } from '../user/user.schema';
+import { BundleController } from './bundle.controller';
+import { BundleService } from './bundle.service';
 
 @Module({
   imports: [
@@ -20,7 +22,7 @@ import { User, UserSchema } from '../user/user.schema';
     UserModule,
     ReviewModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [BundleController],
+  providers: [BundleService],
 })
 export class BundleModule {}

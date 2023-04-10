@@ -8,6 +8,7 @@ import { ReviewModule } from './domain/review/review.module';
 import { OrderModule } from './domain/order/order.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Neo4jModule } from 'nest-neo4j';
+import { BundleModule } from './domain/bundle/bundle.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { Neo4jModule } from 'nest-neo4j';
     UserModule,
     ReviewModule,
     OrderModule,
+    BundleModule
   ],
   controllers: [AppController],
   providers: [

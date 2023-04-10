@@ -40,8 +40,8 @@ export class SupplementController {
   @ApiOperation({ summary: 'edit a supplement' })
   @Put(':id')
   async edit(
-    @Param('id') params,
-    supplementDto: UpdateSupplementDto
+    @Param() params,
+    @Body() supplementDto: UpdateSupplementDto
   ): Promise<Supplement> {
     return this.supplementService.update(params.id, supplementDto);
   }

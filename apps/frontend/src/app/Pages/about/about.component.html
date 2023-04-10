@@ -40,49 +40,69 @@
     ook komt er mogelijkheid om als klant reviews te kunnen schrijven en komen er bundles met meerdere producten.
 </p>
 
-<img src="../../../assets/images/BulkSportShopDiag-ERD.drawio.png" class="px-5 py-5" alt="..." />
+<img src="../../../assets/images/BulkSportShopDiag-ERD.png" class="px-5 py-5" alt="..." />
 
 <div class="row">
     <div class="col-sm-12 col-md-4">
         <p>Supplement</p>
         <ul>
             <li>name: string</li>
-            <li>id: string</li>
-            <li>SupplementType: enum</li>
+            <li>Type: enum</li>
+            <li>image: string</li>
             <li>ContainsLactose: boolean</li>
             <li>IsVegan: boolean</li>
-            <li>Price, number</li>
-        </ul>
-    </div>
-    <div class="col-sm-12 col-md-4">
-        <p>Kit</p>
-        <ul>
-            <li>name: string</li>
-            <li>id: string</li>
-            <li>type: enum</li>
-            <li>Resistance: number</li>
-            <li>Size</li>
             <li>Price: number</li>
+            <li>flavours: string[]</li>
+            <li>sizes: string[]</li>
+            <li>ingredients: string[]</li>
+            <li>review: Review[]</li>
+            <li>orders: Order[id]</li>
+            <li>createdById: UserId</li>
         </ul>
     </div>
     <div class="col-sm-12 col-md-4">
         <p>Bundle</p>
         <ul>
             <li>name: string</li>
-            <li>id: string</li>
-            <li>ContainsLactose: boolean</li>
-            <li>isVegan: boolean</li>
+            <li>description: string</li>
+            <li>image: string</li>
             <li>Price: number</li>
+            <li>review: Review[]</li>
+            <li>orders: Order[id]</li>
+            <li>createdById: UserId</li>
         </ul>
     </div>
     <div class="col-sm-12 col-md-4">
         <p>Review</p>
         <ul>
             <li>Product: string</li>
-            <li>id: string</li>
             <li>user: User</li>
             <li>text: string</li>
+            <li>rating: number</li>
         </ul>
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <p>User</p>
+        <ul>
+            <li>name: string</li>
+            <li>email: string</li>
+            <li>password: string</li>
+            <li>role: enum</li>
+            <li>orders: Order[id]</li>
+            <li>supplements: Supplement[id]</li>
+            <li>reviews: Review[id]</li>
+            <li>bundles: Bundle[id]</li>
+        </ul>
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <p>Order</p>
+        <ul>
+            <li>user: User</li>
+            <li>supplements: Supplement[id]</li>
+            <li>bundles: Bundle[id]</li>
+            <li>Price: number</li>
+            <li>date: Date</li>
+            </ul>   
     </div>
 </div>
 

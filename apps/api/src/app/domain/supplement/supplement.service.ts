@@ -82,7 +82,6 @@ export class SupplementService {
     if (!supplement) {
       throw new NotFoundException(`Supplement with id ${id} not found`);
     }
-    const currentUser = this.userService.getCurrent();
 
     const createdById: MongoObjectId = supplement.createdById;
     const currentUserId = await this.userService.getCurrentId();
@@ -207,7 +206,7 @@ export class SupplementService {
     reviewDto: CreateReviewDto
   ) {
     const supplement = await this.supplementModel.findById(supplementId).exec();
-    let review = supplement.reviews['_id'](reviewId);
+    const review = supplement.reviews['_id'](reviewId);
     if (!review) {
       throw new NotFoundException(`Review with id ${reviewId} not found`);
     }
@@ -215,9 +214,12 @@ export class SupplementService {
     if (review.createdById !== currentUserId) {
       throw new ForbiddenException('Can only edit owned reviews');
     }
-    review = reviewDto;
+    const updatedReview = this.reviewModel.findByIdAndUpdate(
+      reviewId,
+      reviewDto, { new: true},
+    ).exec();
     await supplement.save();
-    return review;
+    return updatedReview;
   }
 
   async deleteReview(supplementId: string, reviewId: string) {

@@ -38,7 +38,7 @@ export class SupplementService {
       throw new BadRequestException('Supplement with this name already exists');
     }
 
-    const currentUser = this.userService.getCurrent();
+    const currentUser = await this.userService.getCurrent();
     
     const createdById: MongoObjectId = currentUser['_id'];
     
@@ -86,17 +86,17 @@ export class SupplementService {
 
     const createdById: MongoObjectId = supplement.createdById;
     const currentUserId = await this.userService.getCurrentId();
-
     if (
-      createdById !== currentUserId
+      createdById.toHexString() !== currentUserId
     ) {
       throw new ForbiddenException('Can only edit owned supplements');
     }
 
+    
+
     const updatedSupplement = await this.supplementModel
       .findByIdAndUpdate(id, supplementDto, { new: true })
       .exec();
-
     await this.neo4jService.write(
       `MATCH (s:Supplement {id: "${id}"}) SET s.name = "${updatedSupplement.name}" RETURN s`
     );
@@ -159,7 +159,7 @@ export class SupplementService {
 
     const createdById: MongoObjectId = supplement.createdById;
     const currentUserId = await this.userService.getCurrentId();
-    if (createdById !== currentUserId) {
+    if (createdById.toHexString() !== currentUserId) {
       throw new ForbiddenException('Can only remove owned supplements');
     }
 
@@ -189,11 +189,16 @@ export class SupplementService {
 
   async addReview(supplementId: string, reviewDto: CreateReviewDto) {
     const supplement = await this.supplementModel.findById(supplementId).exec();
-    const currentUser = this.userService.getCurrent();
-    const review = new this.reviewModel(reviewDto, currentUser);
-    supplement.reviews.push(review);
+    const currentUser = await this.userService.getCurrent();
+
+    const createdById: MongoObjectId = currentUser['_id'];
+    const createdReview = new this.reviewModel({
+      ...reviewDto,
+    })
+    createdReview.createdById = createdById;
+    supplement.reviews.push(createdReview);
     await supplement.save();
-    return review;
+    return createdReview;
   }
 
   async editReview(

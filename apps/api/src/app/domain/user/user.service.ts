@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable, NotFoundException, Request } from '@nestjs/common';
 import { hash } from 'bcrypt';
 import { User, UserDocument } from './user.schema';
 import { CreateUserDto } from './dto/createUser.dto';
@@ -8,12 +8,14 @@ import { isValidObjectId, Model, ObjectId, Types } from 'mongoose';
 import { Neo4jService } from '../../Infrastructure/neo4j/neo4j.service';
 import { OrderDto } from '../order/dto/order.dto';
 import { Order, OrderDocument } from '../order/order.schema';
+import { REQUEST } from '@nestjs/core';
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
-    private readonly neo4jService: Neo4jService
+    private readonly neo4jService: Neo4jService,
+    @Inject(REQUEST) private readonly request: Request
   ) {}
 
   async create(userDto: CreateUserDto): Promise<User> {
@@ -73,19 +75,19 @@ export class UserService {
   }
 
   async getCurrent(): Promise<User> {
-    const user = await this.userModel.findOne({ current: true });
-    if (!user) {
-      throw new NotFoundException('No current user available');
+    const userId = this.request['user']['_id'];
+    const user = await this.userModel.findById(userId).exec()
+    if(!user) {
+      throw new NotFoundException('no current user available');
     }
     return user;
   }
 
   async getCurrentId(): Promise<ObjectId> {
-    const user = await this.userModel.findOne({ current: true });
-    if (!user) {
-      throw new NotFoundException('No current user available');
+    const userId = this.request['user']['_id'];
+    if(!userId) {
+      throw new NotFoundException('no current user available');
     }
-    const userId = user.id;
     return userId;
   }
 

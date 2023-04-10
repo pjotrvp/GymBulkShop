@@ -19,7 +19,7 @@ export class Product {
   @Prop(String)
   image: string;
 
-  @Prop([{ type: SchemaTypes.ObjectId, ref: Review.name , required: false}])
+  @Prop([Review])
   reviews: Review[];
 
   @Prop({ type: SchemaTypes.ObjectId, ref: 'Order' , required: false})

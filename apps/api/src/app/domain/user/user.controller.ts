@@ -10,7 +10,7 @@ import {
   Put,
   Query,
   Req,
-  UseGuards,
+  UseGuards, Request
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/createUser.dto';
@@ -23,8 +23,10 @@ import { OrderDto } from '../order/dto/order.dto';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService,
-    private readonly orderService: OrderService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly orderService: OrderService
+  ) {}
 
   @Get()
   findAll(@Query() query: ListAllEntities): Promise<User[]> {
@@ -76,13 +78,19 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':id/order/:id')
-  updateOrder(@Param('id') id: string, @Body() orderDto: OrderDto) {
-    return this.userService.updateOrder(id, orderDto);
+  updateOrder(
+    @Request() req: any,
+    @Param('id') id: string,
+    @Body() orderDto: OrderDto
+  ) {
+    const userId = req.user.id;
+    return this.userService.updateOrder(id, orderDto, userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id/order/:id')
-  removeOrder(@Param('id') id: string) {
-    return this.userService.removeOrder(id);
+  removeOrder(@Request() req: any, @Param('id') id: string) {
+    const userId = req.user.id;
+    return this.userService.removeOrder(id, userId);
   }
 }

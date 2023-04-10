@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, Request } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { UserService } from '../user/user.service';
 import { BundleService } from './bundle.service';
@@ -19,15 +19,24 @@ export class BundleController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create a bundle' })
   @Post()
-  async create(@Body() supplementDto: CreateBundleDto): Promise<Bundle> {
-    return this.bundleService.create(supplementDto);
+  async create(
+    @Request() req: any,
+    @Body() supplementDto: CreateBundleDto
+  ): Promise<Bundle> {
+    const userId = req.user.id;
+    return this.bundleService.create(supplementDto, userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'edit a bundle' })
   @Put(':id')
-  async edit(@Param('id') params, bundleDto: CreateBundleDto): Promise<Bundle> {
-    return this.bundleService.update(params.id, bundleDto);
+  async edit(
+    @Request() req: any,
+    @Param('id') params,
+    bundleDto: CreateBundleDto
+  ): Promise<Bundle> {
+    const userId = req.user.id;
+    return this.bundleService.update(params.id, bundleDto, userId);
   }
 
   @ApiOperation({ summary: 'get recommended bundles' })
@@ -51,22 +60,29 @@ export class BundleController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'remove a bundle' })
   @Delete(':id')
-  async remove(@Param() params): Promise<Bundle> {
-    return this.bundleService.remove(params.id);
+  async remove(@Request() req: any, @Param() params): Promise<Bundle> {
+    const userId = req.user.id;
+    return this.bundleService.remove(params.id, userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'add a product to a bundle' })
   @Post(':id/products/:productId')
-  async addProduct(@Param() params): Promise<Bundle> {
-    return this.bundleService.addProduct(params.id, params.productId);
+  async addProduct(@Request() req: any, @Param() params): Promise<Bundle> {
+    const userId = req.user.id;
+    return this.bundleService.addProduct(params.id, params.productId, userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'remove a product from a bundle' })
   @Delete(':id/products/:productId')
-  async removeProduct(@Param() params): Promise<Bundle> {
-    return this.bundleService.removeProduct(params.id, params.productId);
+  async removeProduct(@Request() req: any, @Param() params): Promise<Bundle> {
+    const userId = req.user.id;
+    return this.bundleService.removeProduct(
+      params.id,
+      params.productId,
+      userId
+    );
   }
 
   @ApiOperation({ summary: 'get the reviews for a bundle' })
@@ -79,30 +95,36 @@ export class BundleController {
   @ApiOperation({ summary: 'add a review for a bundle' })
   @Post(':id/reviews')
   async addReview(
+    @Request() req: any,
     @Param() params,
     @Body() reviewDto: CreateReviewDto
   ): Promise<Review> {
-    return this.bundleService.createReview(params.id, reviewDto);
+    const userId = req.user.id;
+    return this.bundleService.createReview(params.id, reviewDto, userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'edit a owned review' })
   @Put(':id/reviews/:reviewId')
   async editReview(
+    @Request() req: any,
     @Param() params,
     @Body() reviewDto: UpdateReviewDto
   ): Promise<Review> {
+    const userId = req.user.id;
     return this.bundleService.updateReview(
       params.id,
       params.reviewId,
-      reviewDto
+      reviewDto,
+      userId
     );
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'delete a owned review' })
   @Delete(':id/reviews/:reviewId')
-  async deleteReview(@Param() params): Promise<Review> {
-    return this.bundleService.deleteReview(params.id, params.reviewId);
+  async deleteReview(@Request() req: any, @Param() params): Promise<Review> {
+    const userId = req.user.id;
+    return this.bundleService.deleteReview(params.id, params.reviewId, userId);
   }
 }

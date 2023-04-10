@@ -9,13 +9,14 @@ import { Neo4jService } from '../../Infrastructure/neo4j/neo4j.service';
 import { OrderDto } from '../order/dto/order.dto';
 import { Order, OrderDocument } from '../order/order.schema';
 import { REQUEST } from '@nestjs/core';
+import { AuthController } from '../../auth/auth.controller';
+import { ObjectId as MongoObjectId } from 'mongodb';
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
-    private readonly neo4jService: Neo4jService,
-    @Inject(REQUEST) private readonly request: Request
+    private readonly neo4jService: Neo4jService
   ) {}
 
   async create(userDto: CreateUserDto): Promise<User> {
@@ -74,22 +75,22 @@ export class UserService {
     return user;
   }
 
-  async getCurrent(): Promise<User> {
-    const userId = this.request['user']['_id'];
-    const user = await this.userModel.findById(userId).exec()
-    if(!user) {
-      throw new NotFoundException('no current user available');
-    }
-    return user;
-  }
+  // async getCurrent(): Promise<User> {
+  //   const userId = this.request['user']['_id'];
+  //   const user = await this.userModel.findById(userId).exec()
+  //   if(!user) {
+  //     throw new NotFoundException('no current user available');
+  //   }
+  //   return user;
+  // }
 
-  async getCurrentId(): Promise<ObjectId> {
-    const userId = this.request['user']['_id'];
-    if(!userId) {
-      throw new NotFoundException('no current user available');
-    }
-    return userId;
-  }
+  // async getCurrentId(): Promise<ObjectId> {
+  //   const userId = this.request['user']['_id'];
+  //   if(!userId) {
+  //     throw new NotFoundException('no current user available');
+  //   }
+  //   return userId;
+  // }
 
   async findOneByEmail(email: string): Promise<User> {
     const user = await this.userModel.findOne({ email });
@@ -117,13 +118,18 @@ export class UserService {
     return createdOrder.save();
   }
 
-  async updateOrder(id: string, orderDto: OrderDto): Promise<Order> {
-    const currentUserId = await this.getCurrentId();
+  async updateOrder(
+    id: string,
+    orderDto: OrderDto,
+    currentUserId: MongoObjectId
+  ): Promise<Order> {
     const order = await this.orderModel.findById(id);
     const orderObject = order.toObject();
-    const createdById = orderObject.createdById.toString()
+    const createdById = orderObject.createdById.toString();
 
-    if (new Types.ObjectId(createdById).toString() !== currentUserId.toString()) {
+    if (
+      new Types.ObjectId(createdById).toString() !== currentUserId.toString()
+    ) {
       throw new HttpException(
         'Can only edit owned orders',
         HttpStatus.FORBIDDEN
@@ -142,8 +148,7 @@ export class UserService {
     return this.orderModel.findById(id).exec();
   }
 
-  async removeOrder(id: string) {
-    const currentUserId = await this.getCurrentId();
+  async removeOrder(id: string, currentUserId: MongoObjectId) {
     const order = await this.orderModel.findById(id);
     const orderObject = order.toObject();
     const createdById = orderObject.createdById.toString();

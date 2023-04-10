@@ -31,40 +31,42 @@ export class SupplementService {
     private readonly userService: UserService
   ) {}
 
-  async create(supplementDto: CreateSupplementDto): Promise<Supplement> {
+  async create(
+    supplementDto: CreateSupplementDto,
+    currentUserId: MongoObjectId
+  ): Promise<Supplement> {
     const name = supplementDto.name;
     const supplement = await this.supplementModel.findOne({ name });
     if (supplement) {
       throw new BadRequestException('Supplement with this name already exists');
     }
 
-    const currentUser = await this.userService.getCurrent();
-    
-    const createdById: MongoObjectId = currentUser['_id'];
-    
+    console.log('currentUserId: ', currentUserId)
+
     const createdSupplement = new this.supplementModel({
-      ...supplementDto, 
+      ...supplementDto,
     });
 
-    createdSupplement.createdById = createdById;
-    
+    createdSupplement.createdById = currentUserId;
+
     await createdSupplement.save();
-    
+
     // Add the supplement reference to the user's supplements array
     const updatedUser = await this.userModel.findByIdAndUpdate(
-      currentUser['_id'],
+      currentUserId,
       { $push: { supplements: createdSupplement._id } },
       { new: true }
     );
 
+    const username = this.userService.findOne(currentUserId);
     if (createdSupplement.$isValid) {
       const query = `
     CREATE (s:Supplement {
       name: "${createdSupplement.name}",
-      createdBy: "${currentUser['name']}",
+      createdBy: "${username}",
       id: "${createdSupplement._id}"
     })
-    MERGE (u:User { id: "${currentUser['_id']}" })
+    MERGE (u:User { id: "${currentUserId}" })
     MERGE (u)-[:CREATED]->(s)
     RETURN s
   `;
@@ -76,7 +78,8 @@ export class SupplementService {
 
   async update(
     id: string,
-    supplementDto: UpdateSupplementDto
+    supplementDto: UpdateSupplementDto,
+    currentUserId: MongoObjectId
   ): Promise<Supplement> {
     const supplement = await this.supplementModel.findById(id);
     if (!supplement) {
@@ -84,14 +87,9 @@ export class SupplementService {
     }
 
     const createdById: MongoObjectId = supplement.createdById;
-    const currentUserId = await this.userService.getCurrentId();
-    if (
-      createdById.toHexString() !== currentUserId
-    ) {
+    if (createdById.toHexString() !== currentUserId) {
       throw new ForbiddenException('Can only edit owned supplements');
     }
-
-    
 
     const updatedSupplement = await this.supplementModel
       .findByIdAndUpdate(id, supplementDto, { new: true })
@@ -108,7 +106,7 @@ export class SupplementService {
   }
 
   async findOne(id: string): Promise<Supplement> {
-    const supplement = await this.supplementModel.findOne({ _id: id}).exec();
+    const supplement = await this.supplementModel.findOne({ _id: id }).exec();
     if (!supplement) {
       throw new NotFoundException(`Supplement with ID ${id} not found`);
     }
@@ -148,16 +146,13 @@ export class SupplementService {
     return recommendations;
   }
 
-  async remove(id: string) {
+  async remove(id: string, currentUserId: MongoObjectId) {
     const supplement = await this.supplementModel.findById(id);
     if (!supplement) {
       throw new NotFoundException(`Supplement with id ${id} not found`);
     }
 
-    
-
     const createdById: MongoObjectId = supplement.createdById;
-    const currentUserId = await this.userService.getCurrentId();
     if (createdById.toHexString() !== currentUserId) {
       throw new ForbiddenException('Can only remove owned supplements');
     }
@@ -186,14 +181,17 @@ export class SupplementService {
     return review;
   }
 
-  async addReview(supplementId: string, reviewDto: CreateReviewDto) {
+  async addReview(
+    supplementId: string,
+    reviewDto: CreateReviewDto,
+    currentUserId: MongoObjectId
+  ) {
     const supplement = await this.supplementModel.findById(supplementId).exec();
-    const currentUser = await this.userService.getCurrent();
 
-    const createdById: MongoObjectId = currentUser['_id'];
+    const createdById = currentUserId;
     const createdReview = new this.reviewModel({
       ...reviewDto,
-    })
+    });
     createdReview.createdById = createdById;
     supplement.reviews.push(createdReview);
     await supplement.save();
@@ -203,32 +201,34 @@ export class SupplementService {
   async editReview(
     supplementId: string,
     reviewId: string,
-    reviewDto: CreateReviewDto
+    reviewDto: CreateReviewDto,
+    currentUserId: MongoObjectId
   ) {
     const supplement = await this.supplementModel.findById(supplementId).exec();
     const review = supplement.reviews['_id'](reviewId);
     if (!review) {
       throw new NotFoundException(`Review with id ${reviewId} not found`);
     }
-    const currentUserId = await this.userService.getCurrentId();
     if (review.createdById !== currentUserId) {
       throw new ForbiddenException('Can only edit owned reviews');
     }
-    const updatedReview = this.reviewModel.findByIdAndUpdate(
-      reviewId,
-      reviewDto, { new: true},
-    ).exec();
+    const updatedReview = this.reviewModel
+      .findByIdAndUpdate(reviewId, reviewDto, { new: true })
+      .exec();
     await supplement.save();
     return updatedReview;
   }
 
-  async deleteReview(supplementId: string, reviewId: string) {
+  async deleteReview(
+    supplementId: string,
+    reviewId: string,
+    currentUserId: MongoObjectId
+  ) {
     const supplement = await this.supplementModel.findById(supplementId).exec();
     const review = supplement.reviews['_id'](reviewId);
     if (!review) {
       throw new NotFoundException(`Review with id ${reviewId} not found`);
     }
-    const currentUserId = await this.userService.getCurrentId();
     if (review.createdById !== currentUserId) {
       throw new ForbiddenException('Can only delete owned reviews');
     }
